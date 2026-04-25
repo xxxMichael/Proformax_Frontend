@@ -1,0 +1,66 @@
+.sidebar {
+  width: 240px;
+  background: #062345;
+  color: white;
+  height: 100vh;
+  transition: width 0.3s ease;
+  padding: 15px;
+}
+
+/* 🔥 Colapsado */
+.sidebar.collapsed {
+  width: 70px;
+}
+
+/* Header */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Menú */
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  margin-bottom: 15px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+/* Links */
+.sidebar-menu a {
+  display: block;
+  padding: 12px;
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+/* ✨ Hover */
+.sidebar-menu li:hover {
+  background: #0f3c73;
+}
+
+/* 🔥 Activo */
+.sidebar-menu li.active {
+  background: #19857b;
+}
+
+/* Animación suave */
+.sidebar-menu li,
+.sidebar-menu a {
+  transition: all 0.2s ease;
+}
