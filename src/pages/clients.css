@@ -1,0 +1,66 @@
+.main {
+  width: 100%;
+}
+
+.clientes-content {
+  padding: 20px;
+}
+
+/* Top */
+.clientes-top {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.clientes-top input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.btn-buscar {
+  background: #ccc;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-nuevo {
+  background: #19857b;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Tabla */
+.clientes-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.clientes-table th {
+  background: #d9d9d9;
+  padding: 10px;
+  text-align: left;
+}
+
+.clientes-table td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Botones */
+.btn-action {
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.btn-delete {
+  color: red;
+  cursor: pointer;
+}
