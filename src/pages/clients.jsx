@@ -175,6 +175,7 @@ export default function Clientes() {
         isOpen={openEditModal}
         onClose={() => setOpenEditModal(false)}
         mode="edit"
+        clienteId={clienteSeleccionado?.id}
         initialData={
           clienteSeleccionado && {
             idNumber: clienteSeleccionado.identificacion,

@@ -107,15 +107,31 @@ export const deleteCliente = async (id) => {
 // 🔍 Validar si existe cliente por identificación o email
 export const validarDuplicadoCliente = async (identificacion, email) => {
   try {
-    const { data } = await axios.get(`${API_URL}/clientes`, {
-      headers: getHeaders(),
-      params: {
-        search: identificacion || email,
-        limit: 1
-      }
-    });
+    const headers = getHeaders();
 
-    return data.data; // lista de coincidencias
+    // Buscar por identificación
+    const [resByIdentificacion, resByEmail] = await Promise.all([
+      axios.get(`${API_URL}/clientes`, {
+        headers,
+        params: { search: identificacion, limit: 5 },
+      }),
+      axios.get(`${API_URL}/clientes`, {
+        headers,
+        params: { search: email, limit: 5 },
+      }),
+    ]);
+
+    const coincidencias = [
+      ...resByIdentificacion.data.data,
+      ...resByEmail.data.data,
+    ];
+
+    // Eliminar duplicados por id
+    const unicos = coincidencias.filter(
+      (c, i, arr) => arr.findIndex((x) => x.id === c.id) === i
+    );
+
+    return unicos;
   } catch (error) {
     throw error.response?.data || { message: "Error validando cliente" };
   }
