@@ -25,9 +25,9 @@ export default function Home() {
 
         <div className="home-buttons">
           <button onClick={() => window.location.href='/proformas'}>Proformas</button>
-          <button onClick={() => window.location.href='/clientes'}>Clientes</button>
-          <button onClick={() => window.location.href='/productos'}>Productos</button>
-          <button onClick={() => window.location.href='/proveedores'}>Proveedores</button>
+          <button onClick={() => window.location.href='/clients'}>Clientes</button>
+          <button onClick={() => window.location.href='/products'}>Productos</button>
+          <button onClick={() => window.location.href='/suppliers'}>Proveedores</button>
         </div>
       </div>
     </div>

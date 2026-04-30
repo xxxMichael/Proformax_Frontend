@@ -56,32 +56,43 @@ export default function ClientModal({
   onSave,
   initialData,
   mode = "create",
+  clienteId = null,
 }) {
-  const safeData = initialData || {};
+  const emptyForm = {
+    clientType: "natural",
+    idType: "Cédula",
+    idNumber: "",
+    names: "",
+    lastnames: "",
+    phone: "",
+    email: "",
+  };
 
-  const [form, setForm] = useState({
-    clientType: safeData.clientType || "natural",
-    idType: safeData.idType || "Cédula",
-    idNumber: safeData.idNumber || "",
-    names: safeData.names || "",
-    lastnames: safeData.lastnames || "",
-    phone: safeData.phone || "",
-    email: safeData.email || "",
-  });
-
+  const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    setForm({
-      clientType: safeData.clientType || "natural",
-      idType: safeData.idType || "Cédula",
-      idNumber: safeData.idNumber || "",
-      names: safeData.names || "",
-      lastnames: safeData.lastnames || "",
-      phone: safeData.phone || "",
-      email: safeData.email || "",
-    });
-  }, [initialData]);
+    if (!isOpen) return;
+
+    // Limpiar errores al abrir el modal
+    setErrors({});
+
+    if (mode === "create") {
+      // Siempre limpiar campos al abrir en modo crear
+      setForm({ ...emptyForm });
+    } else if (initialData) {
+      // En modo editar, cargar datos del cliente
+      setForm({
+        clientType: initialData.clientType || "natural",
+        idType: initialData.idType || "Cédula",
+        idNumber: initialData.idNumber || "",
+        names: initialData.names || "",
+        lastnames: initialData.lastnames || "",
+        phone: initialData.phone || "",
+        email: initialData.email || "",
+      });
+    }
+  }, [isOpen, initialData]);
 
   const handleChange = (e) => {
     let value = e.target.value;
@@ -137,21 +148,34 @@ export default function ClientModal({
         form.email
       );
 
-      if (duplicados.length > 0) {
-        const cliente = duplicados[0];
+      // En modo editar, excluir al propio cliente de la validación
+      const otrosClientes = mode === "edit" && clienteId
+        ? duplicados.filter((c) => c.id !== clienteId)
+        : duplicados;
 
+      if (otrosClientes.length > 0) {
         let newErrors = {};
 
-        if (cliente.identificacion === form.idNumber) {
+        // Verificar si algún OTRO cliente tiene la misma identificación
+        const mismaIdentificacion = otrosClientes.find(
+          (c) => c.identificacion === form.idNumber
+        );
+        if (mismaIdentificacion) {
           newErrors.idNumber = "Esta identificación ya está registrada";
         }
 
-        if (cliente.email === form.email) {
+        // Verificar si algún OTRO cliente tiene el mismo email
+        const mismoEmail = otrosClientes.find(
+          (c) => c.email === form.email
+        );
+        if (mismoEmail) {
           newErrors.email = "Este correo ya está registrado";
         }
 
-        setErrors(newErrors);
-        return;
+        if (Object.keys(newErrors).length > 0) {
+          setErrors(newErrors);
+          return;
+        }
       }
 
       // ✅ SI TODO OK
@@ -175,23 +199,6 @@ export default function ClientModal({
         <p className="modal-subtext">
           Registro de nueva entidad o persona natural
         </p>
-
-        {/* Tipo Cliente */}
-        <div className="client-type-box">
-          <button
-            onClick={() => setForm({ ...form, clientType: "natural" })}
-            className={`type-btn ${form.clientType === "natural" ? "active" : ""}`}
-          >
-            Persona Natural
-          </button>
-
-          <button
-            onClick={() => setForm({ ...form, clientType: "company" })}
-            className={`type-btn ${form.clientType === "company" ? "active" : ""}`}
-          >
-            Empresa
-          </button>
-        </div>
 
         <div className="form-grid">
 
