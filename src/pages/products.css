@@ -1,0 +1,82 @@
+.main {
+  width: 100%;
+}
+
+.productos-content {
+  padding: 20px;
+}
+
+/* Top bar */
+.productos-top {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.productos-top input {
+  flex: 1;
+  min-width: 180px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.productos-top select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 140px;
+}
+
+.productos-top .btn-buscar {
+  background: #ccc;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.productos-top .btn-nuevo {
+  background: #19857b;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Badge de tipo */
+.badge-tipo {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge-tipo.producto {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge-tipo.servicio {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.badge-tipo.material {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.badge-tipo.acabado {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-tipo.accesorio {
+  background: #fce4ec;
+  color: #c62828;
+}
