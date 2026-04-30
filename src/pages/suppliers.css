@@ -1,0 +1,37 @@
+.main {
+  width: 100%;
+}
+
+.proveedores-content {
+  padding: 20px;
+}
+
+/* Top */
+.proveedores-top {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.proveedores-top input {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.proveedores-top .btn-buscar {
+  background: #ccc;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+}
+
+.proveedores-top .btn-nuevo {
+  background: #19857b;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
