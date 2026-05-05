@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
@@ -61,11 +62,12 @@ export default function Proveedores() {
   const handleDelete = async () => {
     try {
       await deleteProveedor(proveedorSeleccionado.id);
-
+      toast.success("Proveedor desactivado exitosamente");
       setOpenDeleteModal(false);
       loadProveedores();
     } catch (error) {
       console.error("Error desactivando proveedor", error);
+      toast.error("Error al desactivar el proveedor");
     }
   };
 
@@ -81,11 +83,12 @@ export default function Proveedores() {
         email: data.email,
         estado: true,
       });
-
+      toast.success("Proveedor creado exitosamente");
       setOpenNewModal(false);
       loadProveedores();
     } catch (error) {
       console.error("Error creando proveedor", error);
+      toast.error(error.response?.data?.message || "Error al crear el proveedor");
     }
   };
 
@@ -101,12 +104,18 @@ export default function Proveedores() {
         email: data.email,
         estado: true,
       });
-
+      toast.success("Proveedor actualizado exitosamente");
       setOpenEditModal(false);
       loadProveedores();
     } catch (error) {
       console.error("Error actualizando proveedor", error);
+      toast.error(error.response?.data?.message || "Error al actualizar el proveedor");
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setTimeout(() => loadProveedores(), 0);
   };
 
   return (
@@ -118,21 +127,27 @@ export default function Proveedores() {
 
         <div className="proveedores-content">
 
-          {/* 🔍 FILTROS */}
-          <div className="proveedores-top">
-            <input
-              type="text"
-              placeholder="Buscar proveedor..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          {/* ========== BARRA DE HERRAMIENTAS PREMIUM ========== */}
+          <div className="premium-filter-bar">
+            <div className="search-box">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Buscar por razón social o RUC..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && loadProveedores()}
+              />
+            </div>
 
-            <button className="btn-buscar" onClick={loadProveedores}>
-              Buscar
+            <button className="btn-clear-filters" onClick={handleClearFilters}>
+              🗑️ Limpiar filtros
             </button>
 
-            <button className="btn-nuevo" onClick={() => setOpenNewModal(true)}>
-              + Nuevo Proveedor
+            <div className="spacer"></div>
+
+            <button className="btn-create-new" onClick={() => setOpenNewModal(true)}>
+              <span>+</span> Nuevo Proveedor
             </button>
           </div>
 
