@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
@@ -72,11 +73,12 @@ export default function Productos() {
   const handleDelete = async () => {
     try {
       await deleteProducto(productoSeleccionado.id);
-
+      toast.success("Producto desactivado exitosamente");
       setOpenDeleteModal(false);
       loadProductos();
     } catch (error) {
       console.error("Error desactivando producto", error);
+      toast.error("Error al desactivar el producto");
     }
   };
 
@@ -93,11 +95,12 @@ export default function Productos() {
         aplicaIva: data.aplicaIva,
         estado: true,
       });
-
+      toast.success("Producto creado exitosamente");
       setOpenNewModal(false);
       loadProductos();
     } catch (error) {
       console.error("Error creando producto", error);
+      toast.error(error.response?.data?.message || "Error al crear el producto");
     }
   };
 
@@ -114,12 +117,19 @@ export default function Productos() {
         aplicaIva: data.aplicaIva,
         estado: true,
       });
-
+      toast.success("Producto actualizado exitosamente");
       setOpenEditModal(false);
       loadProductos();
     } catch (error) {
       console.error("Error actualizando producto", error);
+      toast.error(error.response?.data?.message || "Error al actualizar el producto");
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setFiltroTipo("");
+    setTimeout(() => loadProductos(), 0);
   };
 
   // Badge de tipo con color
@@ -136,32 +146,41 @@ export default function Productos() {
 
         <div className="productos-content">
 
-          {/* 🔍 FILTROS */}
-          <div className="productos-top">
-            <input
-              type="text"
-              placeholder="Buscar producto..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          {/* ========== BARRA DE HERRAMIENTAS PREMIUM ========== */}
+          <div className="premium-filter-bar">
+            <div className="search-box">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Buscar por nombre o código..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && loadProductos()}
+              />
+            </div>
 
-            <select
-              value={filtroTipo}
-              onChange={(e) => setFiltroTipo(e.target.value)}
-            >
-              {TIPOS.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
+            <div className="filter-select-group">
+              <label>Tipo:</label>
+              <select
+                value={filtroTipo}
+                onChange={(e) => setFiltroTipo(e.target.value)}
+              >
+                {TIPOS.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <button className="btn-buscar" onClick={loadProductos}>
-              Buscar
+            <button className="btn-clear-filters" onClick={handleClearFilters}>
+              🗑️ Limpiar filtros
             </button>
 
-            <button className="btn-nuevo" onClick={() => setOpenNewModal(true)}>
-              + Nuevo Producto
+            <div className="spacer"></div>
+
+            <button className="btn-create-new" onClick={() => setOpenNewModal(true)}>
+              <span>+</span> Nuevo Producto
             </button>
           </div>
 

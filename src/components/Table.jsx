@@ -6,6 +6,12 @@ export default function Table({
   onView,
   onEdit,
   onDelete,
+  onCustomAction,
+  customActionIcon = "⚙️",
+  customActionTitle = "Acción",
+  onCustomAction,
+  customActionIcon = "⚙️",
+  customActionTitle = "Acción",
   itemsPerPage = 10,
   currentPage = 1,
   onPageChange,
@@ -40,6 +46,8 @@ export default function Table({
                   <button
                     className="accion-btn view-btn"
                     onClick={() => onView(startIndex + rowIndex)}
+                    title="Ver detalle"
+                    title="Ver detalle"
                   >
                     👁
                   </button>
@@ -49,8 +57,20 @@ export default function Table({
                   <button
                     className="accion-btn edit-btn"
                     onClick={() => onEdit(startIndex + rowIndex)}
+                    title="Editar"
+                    title="Editar"
                   >
                     ✏
+                  </button>
+                )}
+
+                {onCustomAction && (
+                  <button
+                    className="accion-btn-text"
+                    onClick={() => onCustomAction(startIndex + rowIndex)}
+                    title={customActionTitle || "Acción"}
+                  >
+                    {customActionIcon || "⚙️"}
                   </button>
                 )}
 
@@ -58,6 +78,8 @@ export default function Table({
                   <button
                     className="accion-btn delete-btn"
                     onClick={() => onDelete(startIndex + rowIndex)}
+                    title="Eliminar"
+                    title="Eliminar"
                   >
                     🗑
                   </button>

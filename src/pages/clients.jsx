@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
@@ -61,11 +62,12 @@ export default function Clientes() {
   const handleDelete = async () => {
     try {
       await deleteCliente(clienteSeleccionado.id);
-
+      toast.success("Cliente eliminado exitosamente");
       setOpenDeleteModal(false);
       loadClientes();
     } catch (error) {
       console.error("Error eliminando cliente", error);
+      toast.error("Error al eliminar el cliente");
     }
   };
 
@@ -80,11 +82,12 @@ export default function Clientes() {
         telefono: data.phone,
         direccion: "Sin dirección"
       });
-
+      toast.success("Cliente creado exitosamente");
       setOpenNewModal(false);
       loadClientes();
     } catch (error) {
       console.error("Error creando cliente", error);
+      toast.error(error.response?.data?.message || "Error al crear el cliente");
     }
   };
 
@@ -99,12 +102,18 @@ export default function Clientes() {
         telefono: data.phone,
         direccion: "Sin dirección"
       });
-
+      toast.success("Cliente actualizado exitosamente");
       setOpenEditModal(false);
       loadClientes();
     } catch (error) {
       console.error("Error actualizando cliente", error);
+      toast.error(error.response?.data?.message || "Error al actualizar el cliente");
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setTimeout(() => loadClientes(), 0);
   };
 
   return (
@@ -116,21 +125,27 @@ export default function Clientes() {
 
         <div className="clientes-content">
 
-          {/* 🔍 FILTROS */}
-          <div className="clientes-top">
-            <input
-              type="text"
-              placeholder="Buscar cliente..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          {/* ========== BARRA DE HERRAMIENTAS PREMIUM ========== */}
+          <div className="premium-filter-bar">
+            <div className="search-box">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Buscar por nombre, apellido o identificación..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && loadClientes()}
+              />
+            </div>
 
-            <button className="btn-buscar" onClick={loadClientes}>
-              Buscar
+            <button className="btn-clear-filters" onClick={handleClearFilters}>
+              🗑️ Limpiar filtros
             </button>
 
-            <button className="btn-nuevo" onClick={() => setOpenNewModal(true)}>
-              + Nuevo Cliente
+            <div className="spacer"></div>
+
+            <button className="btn-create-new" onClick={() => setOpenNewModal(true)}>
+              <span>+</span> Nuevo Cliente
             </button>
           </div>
 
