@@ -1,0 +1,183 @@
+/* ============================
+   OVERLAY — usa z-index alto
+   ============================ */
+.view-proforma-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* ============================
+   CONTENEDOR PRINCIPAL
+   ============================ */
+.view-proforma-modal {
+  width: 750px;
+  max-height: 90vh;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  animation: viewProformaIn 0.2s ease-out;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  overflow-y: auto;
+  font-family: Inter, sans-serif;
+}
+
+@keyframes viewProformaIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.view-proforma-modal h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+}
+
+.view-proforma-modal .proforma-numero {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 18px;
+}
+
+/* ============================
+   SECCIONES INFO
+   ============================ */
+.view-proforma-modal .info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.view-proforma-modal .info-card {
+  background: #f8f9fa;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.view-proforma-modal .info-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #888;
+}
+
+.view-proforma-modal .info-card p {
+  margin: 3px 0;
+  font-size: 14px;
+  color: #333;
+}
+
+/* ============================
+   TABLA DE DETALLES
+   ============================ */
+.view-proforma-modal .detalle-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.view-proforma-modal .detalle-table thead th {
+  background: #f0f0f0;
+  padding: 8px 10px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+}
+
+.view-proforma-modal .detalle-table tbody td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+.view-proforma-modal .detalle-table .text-right {
+  text-align: right;
+}
+
+/* ============================
+   TOTALES
+   ============================ */
+.view-proforma-modal .totales-view {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+}
+
+.view-proforma-modal .totales-view-box {
+  background: #f8f9fa;
+  padding: 14px 20px;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+  min-width: 260px;
+}
+
+.view-proforma-modal .totales-view-box .total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.view-proforma-modal .totales-view-box .total-row.final {
+  border-top: 2px solid #333;
+  margin-top: 6px;
+  padding-top: 8px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #111;
+}
+
+/* ============================
+   OBSERVACIONES
+   ============================ */
+.view-proforma-modal .observaciones-box {
+  background: #fffde7;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #fff9c4;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #5d4037;
+}
+
+/* ============================
+   BOTONES
+   ============================ */
+.view-proforma-modal .modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.view-proforma-modal .btn-pdf {
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: #1565c0;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.view-proforma-modal .btn-pdf:hover {
+  background: #0d47a1;
+}
+
+.view-proforma-modal .btn-close-view {
+  padding: 8px 18px;
+  border-radius: 8px;
+  background: #ddd;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  font-size: 14px;
+}

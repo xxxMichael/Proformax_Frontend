@@ -1,0 +1,177 @@
+.main {
+  width: 100%;
+}
+
+.proformas-content {
+  padding: 20px;
+}
+
+/* ============================
+   TOP BAR — Filtros
+   ============================ */
+.proformas-top {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.proformas-top input {
+  flex: 1;
+  min-width: 160px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.proformas-top select {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 140px;
+}
+
+.proformas-top .btn-buscar {
+  background: #ccc;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.proformas-top .btn-nuevo {
+  background: #19857b;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* ============================
+   BADGES DE ESTADO
+   ============================ */
+.badge-estado {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-estado.EMITIDA {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge-estado.ACEPTADA {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-estado.ANULADA {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* ============================
+   MODAL DE CAMBIO DE ESTADO
+   ============================ */
+.estado-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.estado-modal-card {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: estadoFadeIn 0.2s ease-out;
+}
+
+@keyframes estadoFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.estado-modal-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px 0;
+}
+
+.estado-modal-card .estado-info {
+  color: #666;
+  margin-bottom: 18px;
+  font-size: 14px;
+}
+
+.estado-modal-card label {
+  font-size: 14px;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.estado-modal-card select,
+.estado-modal-card textarea {
+  width: 100%;
+  padding: 8px;
+  border-radius: 7px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.estado-modal-card textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.estado-modal-card .modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.estado-modal-card .btn-cancel {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #ddd;
+  border: 1px solid #bbb;
+  cursor: pointer;
+}
+
+.estado-modal-card .btn-confirm-estado {
+  padding: 8px 20px;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.estado-modal-card .btn-confirm-estado.aceptar {
+  background: #2e7d32;
+}
+
+.estado-modal-card .btn-confirm-estado.aceptar:hover {
+  background: #1b5e20;
+}
+
+.estado-modal-card .btn-confirm-estado.anular {
+  background: #c62828;
+}
+
+.estado-modal-card .btn-confirm-estado.anular:hover {
+  background: #b71c1c;
+}
