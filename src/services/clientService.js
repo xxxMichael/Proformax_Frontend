@@ -1,39 +1,139 @@
-import api from "./axiosConfig";
+import axios from "axios";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
+// 🔹 Adjunta token en cada request
+const getHeaders = () => {
+  const token = localStorage.getItem("token");
+
+  return {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+};
+
+/* ============================================================
+   🟦 GET /clientes  →  Listar clientes con búsqueda + paginación
+   ============================================================ */
 export const getClientes = async (page = 1, limit = 20, search = "") => {
   try {
-    const { data } = await api.get(`/clientes`, {
+    const { data } = await axios.get(`${API_URL}/clientes`, {
+      headers: getHeaders(),
       params: { page, limit, search },
     });
-    return data;
+
+    return data; // devuelve { total, page, limit, totalPages, data: [...] }
   } catch (error) {
-    throw error.response?.data || error;
+    throw error.response?.data || { message: "Error al cargar clientes" };
   }
 };
 
-export const createCliente = async (clienteData) => {
+/* ============================================================
+   🟩 POST /clientes → Crear cliente
+   ============================================================ */
+export const createCliente = async (cliente) => {
   try {
-    const { data } = await api.post(`/clientes`, clienteData);
-    return data;
+    const { data } = await axios.post(`${API_URL}/clientes`, cliente, {
+      headers: getHeaders(),
+    });
+
+    return data; // devuelve success:true y data:{...}
   } catch (error) {
-    throw error.response?.data || error;
+    throw error.response?.data || { message: "Error creando cliente" };
   }
 };
 
-export const updateCliente = async (id, clienteData) => {
+/* ============================================================
+   🟦 GET /clientes/{id} → Obtener un cliente por ID
+   ============================================================ */
+export const getClienteById = async (id) => {
   try {
-    const { data } = await api.put(`/clientes/${id}`, clienteData);
+    const { data } = await axios.get(`${API_URL}/clientes/${id}`, {
+      headers: getHeaders(),
+    });
+
     return data;
   } catch (error) {
-    throw error.response?.data || error;
+    throw error.response?.data || { message: "Cliente no encontrado" };
   }
 };
 
+/* ============================================================
+   🟨 PUT /clientes/{id} → Actualización COMPLETA
+   ============================================================ */
+export const updateCliente = async (id, cliente) => {
+  try {
+    const { data } = await axios.put(`${API_URL}/clientes/${id}`, cliente, {
+      headers: getHeaders(),
+    });
+
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: "Error actualizando cliente" };
+  }
+};
+
+/* ============================================================
+   🟧 PATCH /clientes/{id} → Actualización PARCIAL
+   ============================================================ */
+export const patchCliente = async (id, clienteParcial) => {
+  try {
+    const { data } = await axios.patch(
+      `${API_URL}/clientes/${id}`,
+      clienteParcial,
+      { headers: getHeaders() }
+    );
+
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: "Error en actualización parcial" };
+  }
+};
+
+/* ============================================================
+   🟥 DELETE /clientes/{id} → Eliminar cliente
+   ============================================================ */
 export const deleteCliente = async (id) => {
   try {
-    const { data } = await api.delete(`/clientes/${id}`);
+    const { data } = await axios.delete(`${API_URL}/clientes/${id}`, {
+      headers: getHeaders(),
+    });
+
     return data;
   } catch (error) {
-    throw error.response?.data || error;
+    throw error.response?.data || { message: "Error eliminando cliente" };
+  }
+};
+
+// 🔍 Validar si existe cliente por identificación o email
+export const validarDuplicadoCliente = async (identificacion, email) => {
+  try {
+    const headers = getHeaders();
+
+    // Buscar por identificación
+    const [resByIdentificacion, resByEmail] = await Promise.all([
+      axios.get(`${API_URL}/clientes`, {
+        headers,
+        params: { search: identificacion, limit: 5 },
+      }),
+      axios.get(`${API_URL}/clientes`, {
+        headers,
+        params: { search: email, limit: 5 },
+      }),
+    ]);
+
+    const coincidencias = [
+      ...resByIdentificacion.data.data,
+      ...resByEmail.data.data,
+    ];
+
+    // Eliminar duplicados por id
+    const unicos = coincidencias.filter(
+      (c, i, arr) => arr.findIndex((x) => x.id === c.id) === i
+    );
+
+    return unicos;
+  } catch (error) {
+    throw error.response?.data || { message: "Error validando cliente" };
   }
 };

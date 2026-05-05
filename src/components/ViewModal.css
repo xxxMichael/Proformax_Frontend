@@ -1,0 +1,53 @@
+.view-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.view-modal {
+  background: white;
+  padding: 25px;
+  width: 420px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  font-family: Inter, sans-serif;
+}
+
+.view-modal h2 {
+  margin-bottom: 15px;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.view-card {
+  background: #f4f4f4;
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  line-height: 1.7;
+}
+
+.view-card p {
+  margin: 4px 0;
+  color: #333;
+}
+
+.close-btn {
+  width: 100%;
+  background: #4f46e5;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.close-btn:hover {
+  background: #3c39c7;
+}

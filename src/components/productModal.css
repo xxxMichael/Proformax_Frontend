@@ -1,0 +1,133 @@
+/* Fondo oscuro */
+.product-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Contenedor del modal */
+.product-modal-container {
+  width: 900px;
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  animation: productFadeIn 0.2s ease-out;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+@keyframes productFadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.product-modal-container .modal-title {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.product-modal-container .modal-subtext {
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+.product-modal-container .form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.product-modal-container label {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.product-modal-container input,
+.product-modal-container select,
+.product-modal-container textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 7px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.product-modal-container textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* Botones */
+.product-modal-container .modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.product-modal-container .btn-cancel {
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #ddd;
+  border: 1px solid #bbb;
+  cursor: pointer;
+}
+
+.product-modal-container .btn-save {
+  padding: 8px 20px;
+  border-radius: 8px;
+  background: #0f8a65;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.product-modal-container .btn-save:hover {
+  background: #0d7557;
+}
+
+.product-modal-container input:disabled,
+.product-modal-container select:disabled {
+  background: #e9e9e9;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.product-modal-container .error {
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 2px;
+  display: block;
+}
+
+/* Descripción ocupa fila completa */
+.product-modal-container .form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+/* Checkbox IVA */
+.product-modal-container .checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.product-modal-container .checkbox-row input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+  accent-color: #0f8a65;
+  transform: scale(1.2);
+  cursor: pointer;
+}
+
+.product-modal-container .checkbox-row label {
+  font-weight: 500;
+  cursor: pointer;
+}
