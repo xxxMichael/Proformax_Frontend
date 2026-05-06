@@ -33,11 +33,16 @@ export default function Proveedores() {
 
   const loadProveedores = async () => {
     try {
-      const resp = await getProveedores(1, 20, search);
+      const resp = await getProveedores(1, 100, search);
       setProveedores(resp.data);
     } catch (error) {
       console.error("Error cargando proveedores", error);
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setTimeout(() => loadProveedores(), 0);
   };
 
   // 🟡 EDITAR
@@ -61,7 +66,6 @@ export default function Proveedores() {
   const handleDelete = async () => {
     try {
       await deleteProveedor(proveedorSeleccionado.id);
-
       setOpenDeleteModal(false);
       loadProveedores();
     } catch (error) {
@@ -81,7 +85,6 @@ export default function Proveedores() {
         email: data.email,
         estado: true,
       });
-
       setOpenNewModal(false);
       loadProveedores();
     } catch (error) {
@@ -101,7 +104,6 @@ export default function Proveedores() {
         email: data.email,
         estado: true,
       });
-
       setOpenEditModal(false);
       loadProveedores();
     } catch (error) {
@@ -118,21 +120,27 @@ export default function Proveedores() {
 
         <div className="proveedores-content">
 
-          {/* 🔍 FILTROS */}
-          <div className="proveedores-top">
-            <input
-              type="text"
-              placeholder="Buscar proveedor..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          {/* ========== BARRA DE HERRAMIENTAS PREMIUM ========== */}
+          <div className="premium-filter-bar">
+            <div className="search-box">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Buscar proveedor por nombre o identificación..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && loadProveedores()}
+              />
+            </div>
 
-            <button className="btn-buscar" onClick={loadProveedores}>
-              Buscar
+            <button className="btn-clear-filters" onClick={handleClearFilters}>
+              🗑️ Limpiar filtros
             </button>
 
-            <button className="btn-nuevo" onClick={() => setOpenNewModal(true)}>
-              + Nuevo Proveedor
+            <div className="spacer"></div>
+
+            <button className="btn-create-new" onClick={() => setOpenNewModal(true)}>
+              <span>+</span> Nuevo Proveedor
             </button>
           </div>
 

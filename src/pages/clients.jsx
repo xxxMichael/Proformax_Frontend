@@ -33,11 +33,17 @@ export default function Clientes() {
 
   const loadClientes = async () => {
     try {
-      const resp = await getClientes(1, 20, search);
+      const resp = await getClientes(1, 100, search);
       setClientes(resp.data);
     } catch (error) {
       console.error("Error cargando clientes", error);
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    // Usamos setTimeout para asegurar que el estado se limpie antes de cargar
+    setTimeout(() => loadClientes(), 0);
   };
 
   // 🟡 EDITAR
@@ -61,7 +67,6 @@ export default function Clientes() {
   const handleDelete = async () => {
     try {
       await deleteCliente(clienteSeleccionado.id);
-
       setOpenDeleteModal(false);
       loadClientes();
     } catch (error) {
@@ -80,7 +85,6 @@ export default function Clientes() {
         telefono: data.phone,
         direccion: "Sin dirección"
       });
-
       setOpenNewModal(false);
       loadClientes();
     } catch (error) {
@@ -99,7 +103,6 @@ export default function Clientes() {
         telefono: data.phone,
         direccion: "Sin dirección"
       });
-
       setOpenEditModal(false);
       loadClientes();
     } catch (error) {
@@ -116,21 +119,27 @@ export default function Clientes() {
 
         <div className="clientes-content">
 
-          {/* 🔍 FILTROS */}
-          <div className="clientes-top">
-            <input
-              type="text"
-              placeholder="Buscar cliente..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          {/* ========== BARRA DE HERRAMIENTAS PREMIUM ========== */}
+          <div className="premium-filter-bar">
+            <div className="search-box">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Buscar cliente por nombre o identificación..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && loadClientes()}
+              />
+            </div>
 
-            <button className="btn-buscar" onClick={loadClientes}>
-              Buscar
+            <button className="btn-clear-filters" onClick={handleClearFilters}>
+              🗑️ Limpiar filtros
             </button>
 
-            <button className="btn-nuevo" onClick={() => setOpenNewModal(true)}>
-              + Nuevo Cliente
+            <div className="spacer"></div>
+
+            <button className="btn-create-new" onClick={() => setOpenNewModal(true)}>
+              <span>+</span> Nuevo Cliente
             </button>
           </div>
 

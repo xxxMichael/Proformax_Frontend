@@ -1,0 +1,141 @@
+.config-container-new {
+  padding: 40px;
+  background-color: #ffffff;
+  min-height: calc(100vh - 64px);
+  font-family: "Inter", sans-serif;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 40px;
+}
+
+.config-content-grid {
+  display: flex;
+  gap: 60px;
+  align-items: flex-start;
+}
+
+.config-form-new {
+  flex: 2;
+}
+
+.form-row-new {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 25px;
+}
+
+.form-group-new {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.form-group-new label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+
+.form-group-new input {
+  padding: 12px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 15px;
+  color: #333;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.config-image-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding-top: 10px;
+}
+
+.image-placeholder {
+  width: 180px;
+  height: 220px;
+  background-color: #efefef;
+  border-radius: 4px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+}
+
+.logo-img-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.no-logo-text {
+  color: #9ca3af;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn-upload-image {
+  background-color: #1a8e8e;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: 180px;
+}
+
+.btn-upload-image:hover {
+  background-color: #157373;
+}
+
+.config-actions-new {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 80px;
+}
+
+.btn-cancel-new {
+  background-color: #d9d9d9;
+  color: #000;
+  border: none;
+  padding: 12px 50px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-save-new {
+  background-color: #1a8e8e;
+  color: white;
+  border: none;
+  padding: 12px 50px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-save-new:hover {
+  background-color: #157373;
+}
+
+.btn-cancel-new:hover {
+  opacity: 0.8;
+}

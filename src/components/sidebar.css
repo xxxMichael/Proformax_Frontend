@@ -28,6 +28,15 @@
   cursor: pointer;
 }
 
+/* Logo empresa en sidebar */
+.sidebar-logo {
+  width: 100%;
+  max-width: 150px;
+  max-height: 60px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
 /* Menú */
 .sidebar-menu {
   list-style: none;

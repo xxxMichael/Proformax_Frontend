@@ -44,11 +44,17 @@ export default function Productos() {
 
   const loadProductos = async () => {
     try {
-      const resp = await getProductos(1, 20, search, filtroTipo);
+      const resp = await getProductos(1, 100, search, filtroTipo);
       setProductos(resp.data);
     } catch (error) {
       console.error("Error cargando productos", error);
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setFiltroTipo("");
+    setTimeout(() => loadProductos(), 0);
   };
 
   // 🟡 EDITAR
@@ -72,7 +78,6 @@ export default function Productos() {
   const handleDelete = async () => {
     try {
       await deleteProducto(productoSeleccionado.id);
-
       setOpenDeleteModal(false);
       loadProductos();
     } catch (error) {
@@ -93,7 +98,6 @@ export default function Productos() {
         aplicaIva: data.aplicaIva,
         estado: true,
       });
-
       setOpenNewModal(false);
       loadProductos();
     } catch (error) {
@@ -114,7 +118,6 @@ export default function Productos() {
         aplicaIva: data.aplicaIva,
         estado: true,
       });
-
       setOpenEditModal(false);
       loadProductos();
     } catch (error) {
@@ -122,7 +125,6 @@ export default function Productos() {
     }
   };
 
-  // Badge de tipo con color
   const renderTipoBadge = (tipo) => (
     <span className={`badge-tipo ${tipo}`}>{tipo}</span>
   );
@@ -136,32 +138,41 @@ export default function Productos() {
 
         <div className="productos-content">
 
-          {/* 🔍 FILTROS */}
-          <div className="productos-top">
-            <input
-              type="text"
-              placeholder="Buscar producto..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+          {/* ========== BARRA DE HERRAMIENTAS PREMIUM ========== */}
+          <div className="premium-filter-bar">
+            <div className="search-box">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder="Buscar producto por nombre o código..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                onKeyPress={(e) => e.key === "Enter" && loadProductos()}
+              />
+            </div>
 
-            <select
-              value={filtroTipo}
-              onChange={(e) => setFiltroTipo(e.target.value)}
-            >
-              {TIPOS.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
+            <div className="filter-select-group">
+              <label>Tipo:</label>
+              <select
+                value={filtroTipo}
+                onChange={(e) => setFiltroTipo(e.target.value)}
+              >
+                {TIPOS.map((t) => (
+                  <option key={t.value} value={t.value}>
+                    {t.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-            <button className="btn-buscar" onClick={loadProductos}>
-              Buscar
+            <button className="btn-clear-filters" onClick={handleClearFilters}>
+              🗑️ Limpiar filtros
             </button>
 
-            <button className="btn-nuevo" onClick={() => setOpenNewModal(true)}>
-              + Nuevo Producto
+            <div className="spacer"></div>
+
+            <button className="btn-create-new" onClick={() => setOpenNewModal(true)}>
+              <span>+</span> Nuevo Producto
             </button>
           </div>
 
