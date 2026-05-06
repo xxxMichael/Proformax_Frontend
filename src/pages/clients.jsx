@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
@@ -34,11 +33,17 @@ export default function Clientes() {
 
   const loadClientes = async () => {
     try {
-      const resp = await getClientes(1, 20, search);
+      const resp = await getClientes(1, 100, search);
       setClientes(resp.data);
     } catch (error) {
       console.error("Error cargando clientes", error);
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    // Usamos setTimeout para asegurar que el estado se limpie antes de cargar
+    setTimeout(() => loadClientes(), 0);
   };
 
   // 🟡 EDITAR
@@ -62,12 +67,10 @@ export default function Clientes() {
   const handleDelete = async () => {
     try {
       await deleteCliente(clienteSeleccionado.id);
-      toast.success("Cliente eliminado exitosamente");
       setOpenDeleteModal(false);
       loadClientes();
     } catch (error) {
       console.error("Error eliminando cliente", error);
-      toast.error("Error al eliminar el cliente");
     }
   };
 
@@ -82,12 +85,10 @@ export default function Clientes() {
         telefono: data.phone,
         direccion: "Sin dirección"
       });
-      toast.success("Cliente creado exitosamente");
       setOpenNewModal(false);
       loadClientes();
     } catch (error) {
       console.error("Error creando cliente", error);
-      toast.error(error.response?.data?.message || "Error al crear el cliente");
     }
   };
 
@@ -102,18 +103,11 @@ export default function Clientes() {
         telefono: data.phone,
         direccion: "Sin dirección"
       });
-      toast.success("Cliente actualizado exitosamente");
       setOpenEditModal(false);
       loadClientes();
     } catch (error) {
       console.error("Error actualizando cliente", error);
-      toast.error(error.response?.data?.message || "Error al actualizar el cliente");
     }
-  };
-
-  const handleClearFilters = () => {
-    setSearch("");
-    setTimeout(() => loadClientes(), 0);
   };
 
   return (
@@ -131,7 +125,7 @@ export default function Clientes() {
               <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="Buscar por nombre, apellido o identificación..."
+                placeholder="Buscar cliente por nombre o identificación..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && loadClientes()}

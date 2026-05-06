@@ -14,6 +14,7 @@ export default function Table({
   currentPage = 1,
   onPageChange,
 }) {
+
   const totalPages = Math.ceil(rows.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedRows = rows.slice(startIndex, startIndex + itemsPerPage);
@@ -84,13 +85,16 @@ export default function Table({
             ))
           ) : (
             <tr>
-              <td colSpan={headers.length + 1} className="no-data">
+              <td colSpan={headers.length} className="no-data">
+
                 No hay registros disponibles.
               </td>
             </tr>
           )}
         </tbody>
       </table>
+
+      {/* PAGINACIÓN */}
 
       <div className="table-pagination-new">
         <button

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
@@ -34,11 +33,16 @@ export default function Proveedores() {
 
   const loadProveedores = async () => {
     try {
-      const resp = await getProveedores(1, 20, search);
+      const resp = await getProveedores(1, 100, search);
       setProveedores(resp.data);
     } catch (error) {
       console.error("Error cargando proveedores", error);
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setTimeout(() => loadProveedores(), 0);
   };
 
   // 🟡 EDITAR
@@ -62,12 +66,10 @@ export default function Proveedores() {
   const handleDelete = async () => {
     try {
       await deleteProveedor(proveedorSeleccionado.id);
-      toast.success("Proveedor desactivado exitosamente");
       setOpenDeleteModal(false);
       loadProveedores();
     } catch (error) {
       console.error("Error desactivando proveedor", error);
-      toast.error("Error al desactivar el proveedor");
     }
   };
 
@@ -83,12 +85,10 @@ export default function Proveedores() {
         email: data.email,
         estado: true,
       });
-      toast.success("Proveedor creado exitosamente");
       setOpenNewModal(false);
       loadProveedores();
     } catch (error) {
       console.error("Error creando proveedor", error);
-      toast.error(error.response?.data?.message || "Error al crear el proveedor");
     }
   };
 
@@ -104,18 +104,11 @@ export default function Proveedores() {
         email: data.email,
         estado: true,
       });
-      toast.success("Proveedor actualizado exitosamente");
       setOpenEditModal(false);
       loadProveedores();
     } catch (error) {
       console.error("Error actualizando proveedor", error);
-      toast.error(error.response?.data?.message || "Error al actualizar el proveedor");
     }
-  };
-
-  const handleClearFilters = () => {
-    setSearch("");
-    setTimeout(() => loadProveedores(), 0);
   };
 
   return (
@@ -133,7 +126,7 @@ export default function Proveedores() {
               <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="Buscar por razón social o RUC..."
+                placeholder="Buscar proveedor por nombre o identificación..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && loadProveedores()}

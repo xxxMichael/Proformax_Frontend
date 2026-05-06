@@ -1,177 +1,167 @@
-.main {
-  width: 100%;
-}
-
 .proformas-content {
-  padding: 20px;
+  padding: 24px;
+  background-color: #f3f4f6;
+  min-height: calc(100vh - 64px);
 }
 
-/* ============================
-   TOP BAR — Filtros
-   ============================ */
-.proformas-top {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.proformas-top input {
-  flex: 1;
-  min-width: 160px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.proformas-top select {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  min-width: 140px;
-}
-
-.proformas-top .btn-buscar {
-  background: #ccc;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.proformas-top .btn-nuevo {
-  background: #19857b;
-  color: white;
-  padding: 10px 15px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* ============================
-   BADGES DE ESTADO
-   ============================ */
-.badge-estado {
-  display: inline-block;
-  padding: 3px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.badge-estado.EMITIDA {
-  background: #e3f2fd;
-  color: #1565c0;
-}
-
-.badge-estado.ACEPTADA {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-.badge-estado.ANULADA {
-  background: #ffebee;
-  color: #c62828;
-}
-
-/* ============================
-   MODAL DE CAMBIO DE ESTADO
-   ============================ */
-.estado-modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+/* ========== BARRA DE FILTROS PREMIUM (HORIZONTAL) ========== */
+.premium-filter-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.estado-modal-card {
+  gap: 12px;
   background: white;
-  padding: 25px;
+  padding: 14px 20px;
   border-radius: 12px;
-  width: 420px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: estadoFadeIn 0.2s ease-out;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+  flex-wrap: nowrap;
 }
 
-@keyframes estadoFadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+.search-box {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
 }
 
-.estado-modal-card h2 {
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0 0 6px 0;
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
 }
 
-.estado-modal-card .estado-info {
-  color: #666;
-  margin-bottom: 18px;
-  font-size: 14px;
-}
-
-.estado-modal-card label {
-  font-size: 14px;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.estado-modal-card select,
-.estado-modal-card textarea {
+.search-box input {
   width: 100%;
-  padding: 8px;
-  border-radius: 7px;
-  border: 1px solid #ccc;
-  font-family: inherit;
+  padding: 10px 10px 10px 40px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   font-size: 14px;
-  margin-bottom: 14px;
+  transition: all 0.2s;
 }
 
-.estado-modal-card textarea {
-  resize: vertical;
-  min-height: 60px;
+.search-box input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-.estado-modal-card .modal-buttons {
+.filter-select-group {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   gap: 10px;
 }
 
-.estado-modal-card .btn-cancel {
-  padding: 8px 16px;
+.filter-select-group label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.filter-select-group select {
+  padding: 10px 30px 10px 12px;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
-  background: #ddd;
-  border: 1px solid #bbb;
+  background-color: white;
+  font-size: 14px;
   cursor: pointer;
 }
 
-.estado-modal-card .btn-confirm-estado {
-  padding: 8px 20px;
+/* Select de estado en la barra de filtros */
+.filter-select-premium {
+  padding: 10px 14px;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
+  background-color: white;
+  font-size: 14px;
+  color: #374151;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  width: 170px;
+  flex-shrink: 0;
+}
+
+.filter-select-premium:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.btn-clear-filters {
+  background: #f3f4f6;
+  color: #4b5563;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.btn-clear-filters:hover {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.btn-create-new {
+  background: #6366f1;
   color: white;
   border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 700;
   cursor: pointer;
-  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
-.estado-modal-card .btn-confirm-estado.aceptar {
-  background: #2e7d32;
+.btn-create-new:hover {
+  background: #4f46e5;
+  transform: translateY(-1px);
 }
 
-.estado-modal-card .btn-confirm-estado.aceptar:hover {
-  background: #1b5e20;
+/* Badge de estado general */
+.badge-estado {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
 }
 
-.estado-modal-card .btn-confirm-estado.anular {
-  background: #c62828;
+.badge-estado.EMITIDA  { background-color: #dbeafe; color: #1e40af; }
+.badge-estado.ACEPTADA { background-color: #dcfce7; color: #166534; }
+.badge-estado.ANULADA  { background-color: #fee2e2; color: #991b1b; }
+
+/* Status badge (clases en minúsculas usadas en la tabla) */
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.estado-modal-card .btn-confirm-estado.anular:hover {
-  background: #b71c1c;
+.status-badge.emitida  { background-color: #dbeafe; color: #1e40af; }
+.status-badge.aceptada { background-color: #dcfce7; color: #166534; }
+.status-badge.anulada  { background-color: #fee2e2; color: #991b1b; }
+
+/* Toasts */
+.hot-toast-custom {
+  border-radius: 12px !important;
+  font-weight: 600 !important;
 }

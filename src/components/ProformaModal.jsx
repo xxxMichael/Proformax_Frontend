@@ -1,575 +1,273 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { X, Search, Calendar, Percent, Package, Plus, Trash2, Save, FileText, User, ChevronLeft, ChevronRight } from "lucide-react";
 import "./proformaModal.css";
 
 import { getClientes } from "../services/clientService";
 import { getProductos } from "../services/productService";
+import { createProforma, updateProforma } from "../services/proformaService";
+import toast from "react-hot-toast";
 
 export default function ProformaModal({
   isOpen,
   onClose,
-  onSave,
-  initialData,
-  mode = "create",
+  onSuccess,
+  editingProforma = null,
 }) {
-  const emptyDetalle = {
-    productoServicioId: "",
-    cantidad: 1,
-    precioUnitario: "",
-  };
+  const isEditing = !!editingProforma;
 
-  const emptyForm = {
+  const emptyDetalle = { productoServicioId: "", cantidad: 1, precioUnitario: "" };
+  const [form, setForm] = useState({
     clienteId: "",
     fechaValidez: "",
     porcentajeDescuento: 0,
-    aplicaIva: true,
     observaciones: "",
     detalles: [{ ...emptyDetalle }],
-  };
+  });
 
-  const [form, setForm] = useState(emptyForm);
-  const [errors, setErrors] = useState({});
+  const [aplicaIva, setAplicaIva] = useState(true);
+
   const [clientes, setClientes] = useState([]);
   const [productos, setProductos] = useState([]);
-  
-  // Estados para el buscador de clientes (Accesibilidad adultos)
+  const [loading, setLoading] = useState(false);
   const [showClientSearch, setShowClientSearch] = useState(false);
   const [clientFilter, setClientFilter] = useState("");
-  const [clientPage, setClientPage] = useState(1);
-  const clientsPerPage = 5;
+  const [searchPage, setSearchPage] = useState(1);
+  const resultsPerPage = 5;
 
-  // Cargar clientes y productos al abrir
   useEffect(() => {
     if (!isOpen) return;
-
-    setErrors({});
-
-    const cargarDatos = async () => {
+    const cargarCatalogos = async () => {
       try {
-        const [respClientes, respProductos] = await Promise.all([
-          getClientes(1, 100, ""),
-          getProductos(1, 100, ""),
-        ]);
-        setClientes(respClientes.data);
-        setProductos(respProductos.data);
-      } catch (error) {
-        console.error("Error cargando datos para proforma", error);
-      }
+        const [rc, rp] = await Promise.all([getClientes(1, 100, ""), getProductos(1, 100, "")]);
+        setClientes(rc.data || []);
+        setProductos(rp.data || []);
+      } catch (e) { console.error(e); }
     };
+    cargarCatalogos();
 
-    cargarDatos();
-
-    if (mode === "create") {
-      // Fecha de validez por defecto: HOY
-      const hoy = new Date();
-      const fechaDefault = hoy.toISOString().split("T")[0];
-
+    if (isEditing) {
       setForm({
-        ...emptyForm,
-        fechaValidez: fechaDefault,
+        clienteId: editingProforma.clienteId.toString(),
+        fechaValidez: editingProforma.fechaValidez ? new Date(editingProforma.fechaValidez).toISOString().split("T")[0] : "",
+        porcentajeDescuento: editingProforma.porcentajeDescuento ?? 0,
+        observaciones: editingProforma.observaciones || "",
+        detalles: editingProforma.detalles?.map(d => ({
+          productoServicioId: d.productoServicioId,
+          cantidad: d.cantidad,
+          precioUnitario: d.precioUnitario,
+        })) || [{ ...emptyDetalle }],
+      });
+      // Si la proforma guardada no tiene IVA, desmarcar el checkbox
+      setAplicaIva(parseFloat(editingProforma.totalIva ?? editingProforma.iva ?? 1) > 0);
+    } else {
+      setForm({
+        clienteId: "",
+        fechaValidez: new Date().toISOString().split("T")[0],
+        porcentajeDescuento: 0,
+        observaciones: "",
         detalles: [{ ...emptyDetalle }],
       });
-    } else if (initialData) {
-      setForm({
-        clienteId: initialData.clienteId || "",
-        fechaValidez: initialData.fechaValidez ? new Date(initialData.fechaValidez).toISOString().split("T")[0] : "",
-        porcentajeDescuento: initialData.porcentajeDescuento ?? 0,
-        aplicaIva: initialData.aplicaIva ?? true,
-        observaciones: initialData.observaciones || "",
-        detalles:
-          initialData.detalles && initialData.detalles.length > 0
-            ? initialData.detalles.map((d) => ({
-                productoServicioId: d.productoServicioId,
-                cantidad: d.cantidad,
-                precioUnitario: d.precioUnitario,
-              }))
-            : [{ ...emptyDetalle }],
-      });
+      setAplicaIva(true);
     }
-  }, [isOpen, initialData]);
+    setSearchPage(1);
+    setClientFilter("");
+  }, [isOpen, editingProforma]);
 
-  // ======== MANEJO DE CAMPOS GENERALES ========
-  const handleChange = (e) => {
-    const { name, value } = e.target;
+  const subtotal = form.detalles.reduce((acc, d) => acc + (Number(d.cantidad) * Number(d.precioUnitario) || 0), 0);
+  const descuento = subtotal * (Number(form.porcentajeDescuento) / 100);
+  const iva = aplicaIva ? (subtotal - descuento) * 0.15 : 0;
+  const total = subtotal - descuento + iva;
 
-    if (name === "porcentajeDescuento") {
-      const num = parseFloat(value);
-      if (value === "" || (num >= 0 && num <= 100)) {
-        setForm({ ...form, [name]: value === "" ? "" : num });
-      }
-      return;
-    }
-
-    if (name === "aplicaIva") {
-      setForm({ ...form, [name]: e.target.checked });
-      return;
-    }
-
-    setForm({ ...form, [name]: value });
+  const handleSave = async () => {
+    if (!form.clienteId) return toast.error("Debe seleccionar un cliente");
+    setLoading(true);
+    try {
+      const payload = {
+        ...form,
+        clienteId: parseInt(form.clienteId),
+        aplicaIva,
+        detalles: form.detalles.map(d => ({ ...d, productoServicioId: parseInt(d.productoServicioId) }))
+      };
+      if (isEditing) await updateProforma(editingProforma.id, payload);
+      else await createProforma(payload);
+      toast.success(isEditing ? "Actualizada" : "Creada");
+      onSuccess();
+      onClose();
+    } catch (e) { toast.error(e.message); } finally { setLoading(false); }
   };
 
-  // ======== MANEJO DE DETALLES ========
-  const handleDetalleChange = (index, field, value) => {
-    const nuevosDetalles = [...form.detalles];
-
-    if (field === "productoServicioId") {
-      nuevosDetalles[index].productoServicioId = value ? parseInt(value) : "";
-
-      // Auto-llenar precio del producto seleccionado
-      const producto = productos.find((p) => p.id === parseInt(value));
-      if (producto) {
-        nuevosDetalles[index].precioUnitario = producto.precioBase;
-      }
-    } else if (field === "cantidad") {
-      nuevosDetalles[index].cantidad = value === "" ? "" : parseInt(value) || 0;
-    } else if (field === "precioUnitario") {
-      nuevosDetalles[index].precioUnitario =
-        value === "" ? "" : parseFloat(value) || 0;
-    }
-
-    setForm({ ...form, detalles: nuevosDetalles });
-  };
-
-  const agregarDetalle = () => {
-    setForm({
-      ...form,
-      detalles: [...form.detalles, { ...emptyDetalle }],
-    });
-  };
-
-  const eliminarDetalle = (index) => {
-    if (form.detalles.length <= 1) return;
-    
-    const detalle = form.detalles[index];
-    if (detalle.productoServicioId || detalle.cantidad > 1) {
-      if (!window.confirm("¿Estás seguro de eliminar esta línea de producto?")) {
-        return;
-      }
-    }
-
-    const nuevos = form.detalles.filter((_, i) => i !== index);
-    setForm({ ...form, detalles: nuevos });
-  };
-
-  // ======== CÁLCULOS ========
-  const subtotalSinIva = form.detalles.reduce((sum, d) => {
-    const cant = parseFloat(d.cantidad) || 0;
-    const precio = parseFloat(d.precioUnitario) || 0;
-    return sum + (cant * precio);
-  }, 0);
-
-  const descuentoPercent = parseFloat(form.porcentajeDescuento) || 0;
-  const totalDescuento = Math.round(subtotalSinIva * (descuentoPercent / 100) * 100) / 100;
-  
-  // Base para el IVA (solo de productos que aplican IVA)
-  const baseGravable = form.detalles.reduce((sum, d) => {
-    const producto = productos.find(p => Number(p.id) === Number(d.productoServicioId));
-    if (producto?.aplicaIva) {
-      const cant = parseFloat(d.cantidad) || 0;
-      const precio = parseFloat(d.precioUnitario) || 0;
-      return sum + (cant * precio);
-    }
-    return sum;
-  }, 0);
-
-  // Aplicar descuento proporcional a la base gravable
-  const factorDescuento = 1 - (descuentoPercent / 100);
-  const baseConDescuento = baseGravable * factorDescuento;
-
-  // IVA Final (solo si el checkbox global está marcado)
-  const totalIva = form.aplicaIva 
-    ? Math.round(baseConDescuento * 0.15 * 100) / 100 
-    : 0;
-
-  const totalFinal = Math.round((subtotalSinIva - totalDescuento + totalIva) * 100) / 100;
-
-  // ======== VALIDACIÓN ========
-  const validarFormulario = () => {
-    let newErrors = {};
-
-    if (!form.clienteId) {
-      newErrors.clienteId = "Seleccione un cliente";
-    }
-
-    if (!form.fechaValidez) {
-      newErrors.fechaValidez = "Ingrese fecha de validez";
-    }
-
-    // Validar detalles
-    let detallesValidos = true;
-    form.detalles.forEach((d, i) => {
-      if (!d.productoServicioId) {
-        newErrors[`detalle_producto_${i}`] = "Seleccione producto";
-        detallesValidos = false;
-      }
-      if (!d.cantidad || d.cantidad <= 0) {
-        newErrors[`detalle_cantidad_${i}`] = "Cantidad inválida";
-        detallesValidos = false;
-      }
-      if (!d.precioUnitario || d.precioUnitario <= 0) {
-        newErrors[`detalle_precio_${i}`] = "Precio inválido";
-        detallesValidos = false;
-      }
-    });
-
-    if (!detallesValidos) {
-      newErrors.detalles = "Revise los detalles de la proforma";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  // ======== GUARDAR ========
-  const handleSave = () => {
-    if (!validarFormulario()) return;
-
-    const payload = {
-      clienteId: parseInt(form.clienteId),
-      fechaValidez: form.fechaValidez,
-      porcentajeDescuento: parseFloat(form.porcentajeDescuento) || 0,
-      aplicaIva: form.aplicaIva,
-      observaciones: form.observaciones,
-      detalles: form.detalles.map((d) => ({
-        productoServicioId: parseInt(d.productoServicioId),
-        cantidad: parseInt(d.cantidad),
-        precioUnitario: parseFloat(d.precioUnitario),
-      })),
-    };
-
-    onSave(payload);
-  };
+  const filteredClients = clientes.filter(c => 
+    `${c.nombres} ${c.apellidosRazonSocial}`.toLowerCase().includes(clientFilter.toLowerCase()) || 
+    c.identificacion.includes(clientFilter)
+  );
+  const totalSearchPages = Math.ceil(filteredClients.length / resultsPerPage) || 1;
+  const paginatedClients = filteredClients.slice((searchPage - 1) * resultsPerPage, searchPage * resultsPerPage);
 
   if (!isOpen) return null;
 
   return createPortal(
     <div className="proforma-modal-overlay">
-      <div className="proforma-modal-container">
-        <h2 className="modal-title">
-          {mode === "create" ? "Nueva Proforma" : "Editar Proforma"}
-        </h2>
-        <p className="modal-subtext">
-          {mode === "create"
-            ? "Complete los datos para generar una nueva proforma"
-            : "Modifique los datos de la proforma (solo en estado EMITIDA)"}
-        </p>
+      <div className="proforma-modal-premium">
+        <div className="modal-form-side">
+          <div className="modal-header-simple">
+            <div className="title-group">
+              <FileText className="icon-main" />
+              <div>
+                <h2>{isEditing ? "Editar Proforma" : "Nueva Proforma"}</h2>
+                <span>Complete los campos para generar el documento</span>
+              </div>
+            </div>
+            <button className="btn-close-minimal" onClick={onClose}><X size={18} /></button>
+          </div>
 
-        {/* ========== SECCIÓN: DATOS GENERALES ========== */}
-        <div className="form-section">
-          <h3>📋 Datos Generales</h3>
-          <div className="form-grid">
-            {/* Cliente (Selector Profesional) */}
-            <div className="full-width">
-              <label>Cliente:</label>
-              <div className="client-search-input-group">
-                <input
-                  type="text"
-                  readOnly
-                  placeholder="Haga clic en el botón para buscar un cliente..."
-                  value={
-                    clientes.find((c) => c.id === parseInt(form.clienteId))
-                      ? `${clientes.find((c) => c.id === parseInt(form.clienteId)).identificacion} - ${clientes.find((c) => c.id === parseInt(form.clienteId)).nombres} ${clientes.find((c) => c.id === parseInt(form.clienteId)).apellidosRazonSocial}`
-                      : ""
-                  }
-                  className="client-readonly-input"
-                />
-                {mode === "create" && (
-                  <button 
-                    type="button" 
-                    className="btn-search-trigger"
-                    onClick={() => {
-                      setClientPage(1);
-                      setShowClientSearch(true);
-                    }}
-                  >
-                    🔍 Buscar
+          <div className="modal-sections-container">
+            <div className="section-block">
+              <div className="section-title"><User size={14} /> Información del Cliente</div>
+              <div className="client-selector-card">
+                {form.clienteId ? (
+                  <div className="client-info-row">
+                    <div className="client-avatar">{clientes.find(c => c.id === parseInt(form.clienteId))?.nombres?.charAt(0)}</div>
+                    <div className="client-details">
+                      <strong>{clientes.find(c => c.id === parseInt(form.clienteId))?.nombres} {clientes.find(c => c.id === parseInt(form.clienteId))?.apellidosRazonSocial}</strong>
+                      <span>ID: {clientes.find(c => c.id === parseInt(form.clienteId))?.identificacion}</span>
+                    </div>
+                    {!isEditing && (
+                      <button className="btn-change-client" onClick={() => setShowClientSearch(true)}>Cambiar</button>
+                    )}
+                  </div>
+                ) : (
+                  <button className="btn-select-client-empty" onClick={() => setShowClientSearch(true)}>
+                    <Search size={16} /> Haga clic para seleccionar un cliente
                   </button>
                 )}
               </div>
-              {errors.clienteId && (
-                <span className="error">{errors.clienteId}</span>
-              )}
             </div>
 
-            {/* Fecha de Validez */}
-            <div>
-              <label>Fecha de Validez:</label>
-              <input
-                type="date"
-                name="fechaValidez"
-                value={form.fechaValidez}
-                onChange={handleChange}
-              />
-              {errors.fechaValidez && (
-                <span className="error">{errors.fechaValidez}</span>
-              )}
+            <div className="section-block">
+              <div className="section-title"><Calendar size={14} /> Condiciones de Venta</div>
+              <div className="form-row-2">
+                <div className="input-group-stack">
+                  <label>Fecha de Validez:</label>
+                  <div className="input-with-icon">
+                    <Calendar size={14} className="input-icon" />
+                    <input type="date" name="fechaValidez" value={form.fechaValidez} onChange={e => setForm({...form, fechaValidez: e.target.value})} />
+                  </div>
+                </div>
+                <div className="input-group-stack">
+                  <label>Descuento Global (%):</label>
+                  <div className="input-with-icon">
+                    <Percent size={14} className="input-icon" />
+                    <input type="number" placeholder="0" value={form.porcentajeDescuento} onChange={e => setForm({...form, porcentajeDescuento: e.target.value})} />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            {/* Descuento */}
-            <div>
-              <label>Descuento (%):</label>
-              <input
-                type="number"
-                name="porcentajeDescuento"
-                value={form.porcentajeDescuento}
-                onChange={handleChange}
-                min="0"
-                max="100"
-                step="0.01"
-              />
+            <div className="section-block">
+              <div className="section-title"><Package size={14} /> Detalle de Productos</div>
+              <div className="items-list">
+                {form.detalles.map((d, i) => (
+                  <div key={i} className="item-row-card">
+                    <div className="input-group-stack flex-2">
+                      <label>Producto:</label>
+                      <select value={d.productoServicioId} onChange={e => {
+                        const nuevos = [...form.detalles];
+                        nuevos[i].productoServicioId = e.target.value;
+                        const prod = productos.find(p => p.id === parseInt(e.target.value));
+                        if (prod) nuevos[i].precioUnitario = prod.precioBase;
+                        setForm({...form, detalles: nuevos});
+                      }}>
+                        <option value="">Seleccionar...</option>
+                        {productos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+                      </select>
+                    </div>
+                    <div className="input-group-stack flex-0-5">
+                      <label>Cant:</label>
+                      <input type="number" value={d.cantidad} onChange={e => {
+                        const nuevos = [...form.detalles];
+                        nuevos[i].cantidad = e.target.value;
+                        setForm({...form, detalles: nuevos});
+                      }} />
+                    </div>
+                    <div className="input-group-stack flex-0-8">
+                      <label>Precio:</label>
+                      <input type="number" value={d.precioUnitario} onChange={e => {
+                        const nuevos = [...form.detalles];
+                        nuevos[i].precioUnitario = e.target.value;
+                        setForm({...form, detalles: nuevos});
+                      }} />
+                    </div>
+                    <button className="btn-remove-item" onClick={() => {
+                      if (form.detalles.length > 1) setForm({...form, detalles: form.detalles.filter((_, idx) => idx !== i)});
+                    }}><Trash2 size={14} /></button>
+                  </div>
+                ))}
+                <button className="btn-add-item-modern" onClick={() => setForm({...form, detalles: [...form.detalles, {...emptyDetalle}]})}>
+                  <Plus size={14} /> Añadir otro producto
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
 
-            {/* Checkbox IVA */}
-            <div className="checkbox-container">
-              <label className="checkbox-label">
+        <div className="modal-summary-side">
+          <div className="summary-card">
+            <h3>Resumen</h3>
+            <div className="summary-row"><span>Subtotal:</span><span>${subtotal.toFixed(2)}</span></div>
+            <div className="summary-row discount"><span>Desc:</span><span>-${descuento.toFixed(2)}</span></div>
+
+            {/* ── Checkbox IVA ── */}
+            <div className="summary-iva-toggle">
+              <label className="iva-check-label">
                 <input
                   type="checkbox"
-                  name="aplicaIva"
-                  checked={form.aplicaIva}
-                  onChange={handleChange}
+                  checked={aplicaIva}
+                  onChange={(e) => setAplicaIva(e.target.checked)}
                 />
-                <span>Aplicar IVA (15%)</span>
+                <span>Aplicar IVA 15%</span>
               </label>
+              <span className={`iva-amount ${!aplicaIva ? "iva-disabled" : ""}`}>
+                ${iva.toFixed(2)}
+              </span>
             </div>
 
-            {/* Observaciones */}
-            <div className="full-width">
-              <label>Observaciones:</label>
-              <textarea
-                name="observaciones"
-                value={form.observaciones}
-                onChange={handleChange}
-                placeholder="Notas adicionales..."
-                rows={2}
-              />
-            </div>
+            <div className="summary-divider"></div>
+            <div className="summary-total"><label>TOTAL</label><div className="amount">${total.toFixed(2)}</div></div>
+          </div>
+          <div className="observations-card">
+            <label>Observaciones:</label>
+            <textarea value={form.observaciones} onChange={e => setForm({...form, observaciones: e.target.value})} placeholder="Notas..." />
+          </div>
+          <div className="actions-card">
+            <button className="btn-save-full" onClick={handleSave} disabled={loading}><Save size={18} /> {loading ? "Procesando..." : isEditing ? "Actualizar" : "Generar"}</button>
+            <button className="btn-cancel-full" onClick={onClose}>Cancelar</button>
           </div>
         </div>
 
-        {/* ========== SECCIÓN: DETALLE DE PRODUCTOS ========== */}
-        <div className="detalles-section">
-          <h3>📦 Detalle de Productos / Servicios</h3>
-
-          {errors.detalles && (
-            <span className="error" style={{ marginBottom: 8, display: "block" }}>
-              {errors.detalles}
-            </span>
-          )}
-
-          <table className="detalles-table">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Producto / Servicio</th>
-                <th>Cantidad</th>
-                <th>P. Unitario</th>
-                <th>Subtotal</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {form.detalles.map((detalle, index) => {
-                const subtotalLinea =
-                  (parseFloat(detalle.cantidad) || 0) *
-                  (parseFloat(detalle.precioUnitario) || 0);
-
-                return (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <select
-                        value={detalle.productoServicioId}
-                        onChange={(e) =>
-                          handleDetalleChange(
-                            index,
-                            "productoServicioId",
-                            e.target.value
-                          )
-                        }
-                      >
-                        <option value="">-- Seleccionar --</option>
-                        {productos.map((p) => (
-                          <option key={p.id} value={p.id}>
-                            {p.codigo} — {p.nombre}
-                          </option>
-                        ))}
-                      </select>
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        value={detalle.cantidad}
-                        onChange={(e) =>
-                          handleDetalleChange(index, "cantidad", e.target.value)
-                        }
-                        min="1"
-                        style={{ width: 70 }}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        type="number"
-                        value={detalle.precioUnitario}
-                        onChange={(e) =>
-                          handleDetalleChange(
-                            index,
-                            "precioUnitario",
-                            e.target.value
-                          )
-                        }
-                        min="0"
-                        step="0.01"
-                        style={{ width: 100 }}
-                      />
-                    </td>
-                    <td className="subtotal-col">
-                      ${subtotalLinea.toFixed(2)}
-                    </td>
-                    <td>
-                      <button
-                        type="button"
-                        className="btn-remove-row"
-                        onClick={() => eliminarDetalle(index)}
-                        disabled={form.detalles.length <= 1}
-                        title="Eliminar línea"
-                      >
-                        ✕
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-
-          <button type="button" className="btn-add-row" onClick={agregarDetalle}>
-            + Agregar línea
-          </button>
-        </div>
-
-        {/* ========== RESUMEN DE TOTALES ========== */}
-        <div className="totales-resumen">
-          <div className="totales-box">
-            <div className="total-row">
-              <span>Subtotal sin IVA:</span>
-              <span>${subtotalSinIva.toFixed(2)}</span>
-            </div>
-            <div className="total-row">
-              <span>Descuento ({descuentoPercent}%):</span>
-              <span>-${totalDescuento.toFixed(2)}</span>
-            </div>
-            <div className={`total-row ${!form.aplicaIva ? 'no-iva' : ''}`}>
-              <span>IVA (15%):</span>
-              <span>${totalIva.toFixed(2)}</span>
-            </div>
-            <div className="total-row final">
-              <span>TOTAL:</span>
-              <span>${totalFinal.toFixed(2)}</span>
-            </div>
-          </div>
-        </div>
-
-        {/* ========== BOTONES ========== */}
-        <div className="modal-buttons">
-          <button onClick={onClose} className="btn-cancel">
-            Cancelar
-          </button>
-          {mode === "create" && (
-            <button
-              onClick={() => setForm(emptyForm)}
-              className="btn-clear"
-              type="button"
-            >
-              Limpiar
-            </button>
-          )}
-          <button onClick={handleSave} className="btn-save">
-            {mode === "create" ? "Crear Proforma" : "Guardar Cambios"}
-          </button>
-        </div>
-        {/* ========== SUB-MODAL: BUSCADOR DE CLIENTES ========== */}
         {showClientSearch && (
-          <div className="client-search-overlay">
-            <div className="client-search-card">
-              <div className="search-header-standard">
-                <h3>Seleccionar Cliente</h3>
-                <button 
-                  className="btn-close-modal"
-                  onClick={() => setShowClientSearch(false)}
-                >✕</button>
+          <div className="search-overlay-modern">
+            <div className="search-card-modern">
+              <div className="search-header">
+                <h3>Buscar Cliente</h3>
+                <button onClick={() => setShowClientSearch(false)}><X size={16} /></button>
               </div>
-
-              <div className="search-input-box">
-                <input
-                  type="text"
-                  placeholder="Buscar por nombre o identificación..."
-                  className="search-control"
-                  autoFocus
-                  value={clientFilter}
-                  onChange={(e) => {
-                    setClientFilter(e.target.value);
-                    setClientPage(1);
-                  }}
-                />
+              <div className="search-input-group">
+                <Search size={16} />
+                <input type="text" placeholder="Nombre o ID..." value={clientFilter} onChange={e => {setClientFilter(e.target.value); setSearchPage(1);}} autoFocus />
               </div>
-
-              <div className="search-results-container">
-                <table className="mini-table">
-                  <thead>
-                    <tr>
-                      <th>Identificación</th>
-                      <th>Nombre / Razón Social</th>
-                      <th className="text-right">Acción</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {clientes
-                      .filter(c => 
-                        c.identificacion.includes(clientFilter) ||
-                        `${c.nombres} ${c.apellidosRazonSocial}`.toLowerCase().includes(clientFilter.toLowerCase())
-                      )
-                      .slice((clientPage - 1) * clientsPerPage, clientPage * clientsPerPage)
-                      .map(c => (
-                        <tr key={c.id}>
-                          <td style={{ fontWeight: 600 }}>{c.identificacion}</td>
-                          <td>{c.nombres} {c.apellidosRazonSocial}</td>
-                          <td className="text-right">
-                            <button
-                              type="button"
-                              className="btn-select-client"
-                              onClick={() => {
-                                setForm({...form, clienteId: c.id.toString()});
-                                setShowClientSearch(false);
-                                setClientFilter("");
-                              }}
-                            >
-                              Seleccionar
-                            </button>
-                          </td>
-                        </tr>
-                      ))
-                    }
-                  </tbody>
-                </table>
+              <div className="search-results-modern">
+                {paginatedClients.map(c => (
+                  <div key={c.id} className="client-result-item" onClick={() => { setForm({...form, clienteId: c.id.toString()}); setShowClientSearch(false); }}>
+                    <strong>{c.nombres} {c.apellidosRazonSocial}</strong>
+                    <span>{c.identificacion}</span>
+                  </div>
+                ))}
               </div>
-
-              {/* Paginación */}
-              <div className="search-pagination">
-                <button 
-                  className="btn-page"
-                  disabled={clientPage === 1}
-                  onClick={() => setClientPage(prev => prev - 1)}
-                >
-                  Anterior
-                </button>
-                <span className="page-info">Página {clientPage}</span>
-                <button 
-                  className="btn-page"
-                  disabled={clientPage * clientsPerPage >= clientes.filter(c => c.identificacion.includes(clientFilter) || `${c.nombres} ${c.apellidosRazonSocial}`.toLowerCase().includes(clientFilter.toLowerCase())).length}
-                  onClick={() => setClientPage(prev => prev + 1)}
-                >
-                  Siguiente
-                </button>
+              <div className="search-pagination-controls">
+                <button disabled={searchPage === 1} onClick={() => setSearchPage(searchPage - 1)} className="btn-page-nav"><ChevronLeft size={14} /></button>
+                <span>Pág {searchPage} / {totalSearchPages}</span>
+                <button disabled={searchPage === totalSearchPages} onClick={() => setSearchPage(searchPage + 1)} className="btn-page-nav"><ChevronRight size={14} /></button>
               </div>
             </div>
           </div>

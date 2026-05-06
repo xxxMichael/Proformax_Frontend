@@ -1,183 +1,430 @@
-/* ============================
-   OVERLAY — usa z-index alto
-   ============================ */
+
+/* ── Overlay ── */
 .view-proforma-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.55);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 9999;
+  z-index: 1000;
+  padding: 20px;
 }
 
-/* ============================
-   CONTENEDOR PRINCIPAL
-   ============================ */
-.view-proforma-modal {
-  width: 750px;
-  max-height: 90vh;
+/* ── Contenedor principal ── */
+.view-proforma-container {
   background: white;
-  padding: 25px;
-  border-radius: 12px;
-  animation: viewProformaIn 0.2s ease-out;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  overflow-y: auto;
-  font-family: Inter, sans-serif;
-}
-
-@keyframes viewProformaIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.view-proforma-modal h2 {
-  font-size: 22px;
-  font-weight: 700;
-  margin: 0 0 4px 0;
-}
-
-.view-proforma-modal .proforma-numero {
-  color: #666;
-  font-size: 14px;
-  margin-bottom: 18px;
-}
-
-/* ============================
-   SECCIONES INFO
-   ============================ */
-.view-proforma-modal .info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.view-proforma-modal .info-card {
-  background: #f8f9fa;
-  padding: 14px;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
-}
-
-.view-proforma-modal .info-card h4 {
-  margin: 0 0 8px 0;
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #888;
-}
-
-.view-proforma-modal .info-card p {
-  margin: 3px 0;
-  font-size: 14px;
-  color: #333;
-}
-
-/* ============================
-   TABLA DE DETALLES
-   ============================ */
-.view-proforma-modal .detalle-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 16px;
-}
-
-.view-proforma-modal .detalle-table thead th {
-  background: #f0f0f0;
-  padding: 8px 10px;
-  text-align: left;
-  font-size: 13px;
-  font-weight: 600;
-  color: #555;
-}
-
-.view-proforma-modal .detalle-table tbody td {
-  padding: 8px 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-}
-
-.view-proforma-modal .detalle-table .text-right {
-  text-align: right;
-}
-
-/* ============================
-   TOTALES
-   ============================ */
-.view-proforma-modal .totales-view {
+  max-width: 860px;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 16px;
+  flex-direction: column;
+  max-height: 90vh;
 }
 
-.view-proforma-modal .totales-view-box {
-  background: #f8f9fa;
-  padding: 14px 20px;
-  border-radius: 8px;
-  border: 1px solid #e0e0e0;
-  min-width: 260px;
+/* ── Loader ── */
+.loader-container {
+  padding: 60px;
+  text-align: center;
+  font-size: 16px;
+  color: #64748b;
 }
 
-.view-proforma-modal .totales-view-box .total-row {
+/* ── Card (alias para compatibilidad) ── */
+.view-proforma-card {
+  background: white;
+  width: 100%;
+  max-width: 850px;
+  border-radius: 16px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+}
+
+.view-modal-header {
+  padding: 20px 30px;
+  background: #f8fafc;
   display: flex;
   justify-content: space-between;
-  padding: 3px 0;
-  font-size: 14px;
-  color: #555;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.view-proforma-modal .totales-view-box .total-row.final {
-  border-top: 2px solid #333;
-  margin-top: 6px;
-  padding-top: 8px;
-  font-weight: 700;
-  font-size: 16px;
-  color: #111;
-}
-
-/* ============================
-   OBSERVACIONES
-   ============================ */
-.view-proforma-modal .observaciones-box {
-  background: #fffde7;
-  padding: 12px;
-  border-radius: 8px;
-  border: 1px solid #fff9c4;
-  margin-bottom: 16px;
-  font-size: 14px;
-  color: #5d4037;
-}
-
-/* ============================
-   BOTONES
-   ============================ */
-.view-proforma-modal .modal-footer {
+.header-info {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+  align-items: center;
+  gap: 20px;
+}
+
+.header-info h2 {
+  margin: 0;
+  font-size: 22px;
+  color: #0f172a;
+}
+
+.view-modal-body {
+  padding: 30px;
+  overflow-y: auto;
+}
+
+/* Info Section */
+.info-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 30px;
+}
+
+.info-block label {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
   margin-top: 10px;
 }
 
-.view-proforma-modal .btn-pdf {
-  padding: 8px 18px;
+.info-block p {
+  margin: 4px 0;
+  font-size: 15px;
+  color: #1e293b;
+}
+
+/* Items Table */
+.items-table-container {
+  margin-bottom: 30px;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
-  background: #1565c0;
+  overflow: hidden;
+}
+
+.view-items-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.view-items-table th {
+  background: #f1f5f9;
+  padding: 12px 15px;
+  font-size: 12px;
+  color: #475569;
+  text-align: left;
+}
+
+.view-items-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+}
+
+.text-right { text-align: right !important; }
+
+/* Footer & Totals */
+.footer-section {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 40px;
+}
+
+.obs-box {
+  background: #f8fafc;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.totals-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+  color: #475569;
+}
+
+.total-row.discount { color: #dc2626; }
+
+.total-row.final {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #e2e8f0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* Badges */
+.badge-status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+}
+.badge-status.EMITIDA { background: #dbeafe; color: #1e40af; }
+.badge-status.ACEPTADA { background: #dcfce7; color: #166534; }
+.badge-status.ANULADA { background: #fee2e2; color: #991b1b; }
+
+.view-modal-actions {
+  padding: 20px 30px;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btn-print {
+  background: #1e293b;
   color: white;
   border: none;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.view-proforma-modal .btn-pdf:hover {
-  background: #0d47a1;
-}
-
-.view-proforma-modal .btn-close-view {
-  padding: 8px 18px;
+  padding: 10px 20px;
   border-radius: 8px;
-  background: #ddd;
-  border: 1px solid #bbb;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   cursor: pointer;
+}
+
+.btn-close-text {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Header del modal ── */
+.view-modal-header {
+  padding: 20px 30px;
+  background: #f8fafc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header-title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-title h2 {
+  margin: 0;
+  font-size: 20px;
+  color: #0f172a;
+}
+
+.btn-close-view {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.btn-close-view:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* ── Contenido scrolleable ── */
+.view-modal-content {
+  padding: 28px 30px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ── Grid de info (número + cliente) ── */
+.proforma-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 28px;
+}
+
+.info-block label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  margin-top: 10px;
+  letter-spacing: 0.05em;
+}
+
+.info-block p {
+  margin: 3px 0 0;
   font-size: 14px;
+  color: #1e293b;
+}
+
+/* ── Tabla de ítems ── */
+.details-table-container {
+  margin-bottom: 28px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.view-items-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.view-items-table th {
+  background: #f1f5f9;
+  padding: 11px 14px;
+  font-size: 11px;
+  color: #475569;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.view-items-table td {
+  padding: 11px 14px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #1e293b;
+}
+
+.view-items-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.text-center { text-align: center !important; }
+.text-right  { text-align: right  !important; }
+
+/* ── Grid resumen (observaciones + totales) ── */
+.view-summary-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 32px;
+}
+
+.observations-box {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.observations-box label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.observations-box p {
+  margin: 0;
+  font-size: 14px;
+  color: #475569;
+}
+
+.totals-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #475569;
+}
+
+.total-row.discount { color: #dc2626; }
+
+.total-final {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #e2e8f0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+/* ── Footer del modal ── */
+.view-modal-footer {
+  padding: 18px 30px;
+  background: #f8fafc;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.btn-print {
+  background: #1e293b;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-print:hover {
+  background: #0f172a;
+}
+
+.btn-close-bottom {
+  background: white;
+  border: 1px solid #e2e8f0;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: #475569;
+  transition: background 0.2s;
+}
+
+.btn-close-bottom:hover {
+  background: #f1f5f9;
+}
+
+/* ── Status badges (reutilizadas del modal) ── */
+.status-badge.emitida  { background: #dbeafe; color: #1e40af; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.status-badge.aceptada { background: #dcfce7; color: #166534; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.status-badge.anulada  { background: #fee2e2; color: #991b1b; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .proforma-info-grid,
+  .view-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .view-proforma-container {
+    max-height: 95vh;
+    border-radius: 12px;
+  }
 }

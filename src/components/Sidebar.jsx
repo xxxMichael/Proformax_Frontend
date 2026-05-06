@@ -1,10 +1,22 @@
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./sidebar.css";
 
 export default function Sidebar() {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const [logo, setLogo] = useState(
+    () => localStorage.getItem("empresa_logo") || null
+  );
+
+  useEffect(() => {
+    const handleLogoUpdate = () => {
+      const saved = localStorage.getItem("empresa_logo");
+      if (saved) setLogo(saved);
+    };
+    window.addEventListener("logo_updated", handleLogoUpdate);
+    return () => window.removeEventListener("logo_updated", handleLogoUpdate);
+  }, []);
 
   const menu = [
     { name: "Inicio", path: "/home" },
@@ -21,9 +33,12 @@ export default function Sidebar() {
       
       {/* Header */}
       <div className="sidebar-header">
-        {!collapsed && <h2>PROFORMAX</h2>}
+        {logo && !collapsed && (
+          <img src={logo} alt="logo empresa" className="sidebar-logo" />
+        )}
+        {!logo && !collapsed && <h2>PROFORMAX</h2>}
 
-        <button 
+        <button
           className="toggle-btn"
           onClick={() => setCollapsed(!collapsed)}
         >
