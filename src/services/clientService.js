@@ -104,6 +104,7 @@ export const deleteCliente = async (id) => {
     throw error.response?.data || { message: "Error eliminando cliente" };
   }
 };
+
 // 🔍 Validar si existe cliente por identificación o email
 export const validarDuplicadoCliente = async (identificacion, email) => {
   try {
