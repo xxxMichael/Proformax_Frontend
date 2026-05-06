@@ -1,155 +1,82 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-
+import Table from "../components/Table";
 import ProformaModal from "../components/ProformaModal";
 import ViewProformaModal from "../components/ViewProformaModal";
-import Table from "../components/Table";
-
-import {
-  getProformas,
-  getProformaById,
-  createProforma,
-  updateProforma,
-  cambiarEstadoProforma,
-} from "../services/proformaService";
+import StatusModal from "../components/StatusModal";
+import { getProformas, getProformaById } from "../services/proformaService";
+import { RefreshCcw } from "lucide-react";
+import toast from "react-hot-toast";
 
 import "./proformas.css";
-
-const ESTADOS_FILTRO = [
-  { value: "", label: "Todos los estados" },
-  { value: "EMITIDA", label: "Emitida" },
-  { value: "ACEPTADA", label: "Aceptada" },
-  { value: "ANULADA", label: "Anulada" },
-];
 
 export default function Proformas() {
   const [proformas, setProformas] = useState([]);
   const [search, setSearch] = useState("");
-  const [filtroEstado, setFiltroEstado] = useState("");
+  const [estado, setEstado] = useState("");
 
-  const [openNewModal, setOpenNewModal] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openViewModal, setOpenViewModal] = useState(false);
-  const [openEstadoModal, setOpenEstadoModal] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
+  const [selectedProforma, setSelectedProforma] = useState(null);
+  const [editingProforma, setEditingProforma] = useState(null);
   const [page, setPage] = useState(1);
-  const [proformaSeleccionada, setProformaSeleccionada] = useState(null);
-
-  // Estado del modal de cambio de estado
-  const [nuevoEstado, setNuevoEstado] = useState("ACEPTADA");
-  const [observacionesEstado, setObservacionesEstado] = useState("");
-
-  // Helper para formatear fechas sin error de zona horaria
-  const formatDate = (dateStr) => {
-    if (!dateStr) return "-";
-    const date = new Date(dateStr);
-    const userTimezoneOffset = date.getTimezoneOffset() * 60000;
-    return new Date(date.getTime() + userTimezoneOffset).toLocaleDateString("es-EC");
-  };
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     loadProformas();
-  }, []);
+  }, [estado]);
 
   const loadProformas = async () => {
+    setLoading(true);
     try {
-      const resp = await getProformas(1, 50, search, filtroEstado);
-      setProformas(resp.data);
+      const resp = await getProformas(1, 100, search, estado);
+      setProformas(resp.data || []);
     } catch (error) {
       console.error("Error cargando proformas", error);
-    }
-  };
-
-  // 👁‍🗨 VER DETALLE
-  const abrirVer = (proforma) => {
-    setProformaSeleccionada(proforma);
-    setOpenViewModal(true);
-  };
-
-  // 🟡 EDITAR (solo EMITIDA)
-  const abrirEditar = async (proforma) => {
-    if (proforma.estado !== "EMITIDA") {
-      toast.error("Solo se pueden editar proformas en estado EMITIDA");
-      return;
-    }
-    
-    // Cargamos la proforma completa (con detalles) antes de abrir el modal
-    try {
-      const resp = await getProformaById(proforma.id);
-      setProformaSeleccionada(resp.data);
-      setOpenEditModal(true);
-    } catch (e) {
-      toast.error("Error al cargar los detalles de la proforma");
-    }
-  };
-
-  // 🔄 CAMBIAR ESTADO (solo EMITIDA)
-  const abrirCambioEstado = (proforma) => {
-    if (proforma.estado !== "EMITIDA") {
-      toast.error("Esta proforma ya no puede cambiar de estado");
-      return;
-    }
-    setProformaSeleccionada(proforma);
-    setNuevoEstado("ACEPTADA");
-    setObservacionesEstado("");
-    setOpenEstadoModal(true);
-  };
-
-  const handleCambiarEstado = async () => {
-    try {
-      await cambiarEstadoProforma(
-        proformaSeleccionada.id,
-        nuevoEstado,
-        observacionesEstado
-      );
-      toast.success(`Proforma ${nuevoEstado.toLowerCase()} exitosamente`);
-      setOpenEstadoModal(false);
-      loadProformas();
-    } catch (error) {
-      console.error("Error cambiando estado", error);
-      toast.error("Error al cambiar el estado de la proforma");
-    }
-  };
-
-  // 🟢 CREAR
-  const handleCreate = async (data) => {
-    try {
-      await createProforma(data);
-      toast.success("Proforma creada exitosamente");
-      setOpenNewModal(false);
-      loadProformas();
-    } catch (error) {
-      console.error("Error creando proforma", error);
-      toast.error(error.response?.data?.message || "Error al crear la proforma");
-    }
-  };
-
-  // 🔵 EDITAR
-  const handleEdit = async (data) => {
-    try {
-      await updateProforma(proformaSeleccionada.id, data);
-      toast.success("Proforma actualizada exitosamente");
-      setOpenEditModal(false);
-      loadProformas();
-    } catch (error) {
-      console.error("Error actualizando proforma", error);
-      toast.error(error.response?.data?.message || "Error al actualizar la proforma");
+      toast.error("Error al cargar proformas");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleClearFilters = () => {
     setSearch("");
-    setFiltroEstado("");
-    // Usamos setTimeout para asegurar que los estados se actualicen antes de cargar
+    setEstado("");
     setTimeout(() => loadProformas(), 0);
   };
 
-  // Badge de estado con color
-  const renderEstadoBadge = (estado) => (
-    <span className={`badge-estado ${estado}`}>{estado}</span>
-  );
+  const formatLocalDate = (dateStr) => {
+    if (!dateStr) return "N/A";
+    const [year, month, day] = dateStr.split("T")[0].split("-");
+    return `${day}/${month}/${year}`;
+  };
+
+  const handleAction = async (index, type) => {
+    const proforma = proformas[index];
+    if (!proforma) return;
+
+    if (type === "view") {
+      setSelectedProforma(proforma);
+      setIsViewModalOpen(true);
+    } else if (type === "edit") {
+      if (proforma.estado !== "EMITIDA") {
+        return toast.error("Solo se pueden editar proformas EMITIDAS");
+      }
+      try {
+        const resp = await getProformaById(proforma.id);
+        setEditingProforma(resp.data ?? resp);
+      } catch {
+        toast.error("No se pudo cargar la proforma para editar");
+        return;
+      }
+      setIsModalOpen(true);
+    } else if (type === "status") {
+      setSelectedProforma(proforma);
+      setIsStatusModalOpen(true);
+    }
+  };
 
   return (
     <div className="layout">
@@ -160,7 +87,7 @@ export default function Proformas() {
 
         <div className="proformas-content">
 
-          {/* ========== BARRA DE HERRAMIENTAS PREMIUM ========== */}
+          {/* ========== BARRA DE HERRAMIENTAS ========== */}
           <div className="premium-filter-bar">
             <div className="search-box">
               <span className="search-icon">🔍</span>
@@ -173,19 +100,16 @@ export default function Proformas() {
               />
             </div>
 
-            <div className="filter-select-group">
-              <label>Estado:</label>
-              <select
-                value={filtroEstado}
-                onChange={(e) => setFiltroEstado(e.target.value)}
-              >
-                {ESTADOS_FILTRO.map((e) => (
-                  <option key={e.value} value={e.value}>
-                    {e.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <select
+              className="filter-select-premium"
+              value={estado}
+              onChange={(e) => setEstado(e.target.value)}
+            >
+              <option value="">Todos los estados</option>
+              <option value="EMITIDA">EMITIDA</option>
+              <option value="ACEPTADA">ACEPTADA</option>
+              <option value="ANULADA">ANULADA</option>
+            </select>
 
             <button className="btn-clear-filters" onClick={handleClearFilters}>
               🗑️ Limpiar filtros
@@ -193,115 +117,63 @@ export default function Proformas() {
 
             <div className="spacer"></div>
 
-            <button className="btn-create-new" onClick={() => setOpenNewModal(true)}>
+            <button
+              className="btn-create-new"
+              onClick={() => { setEditingProforma(null); setIsModalOpen(true); }}
+            >
               <span>+</span> Nueva Proforma
             </button>
           </div>
 
-          {/* 🧠 TABLA */}
+          {/* ========== TABLA ========== */}
           <Table
-            headers={[
-              "#",
-              "Nro. Proforma",
-              "Fecha Emisión",
-              "Validez",
-              "Estado",
-              "Subtotal",
-              "Total",
-              "Acciones",
-            ]}
+            headers={["#", "Número", "Cliente", "Fecha Emisión", "Total", "Estado", "Acciones"]}
             rows={proformas.map((p, i) => [
               i + 1,
               p.numeroProforma,
-              formatDate(p.fechaEmision),
-              formatDate(p.fechaValidez),
-              renderEstadoBadge(p.estado),
-              `$${parseFloat(p.subtotalSinIva).toFixed(2)}`,
-              `$${parseFloat(p.totalFinal).toFixed(2)}`,
+              p.cliente
+                ? `${p.cliente.nombres} ${p.cliente.apellidosRazonSocial}`
+                : "N/A",
+              formatLocalDate(p.fechaEmision),
+              <strong key={p.id}>${Number(p.totalFinal || 0).toFixed(2)}</strong>,
+              <span
+                key={p.id + "_st"}
+                className={`status-badge ${p.estado.toLowerCase()}`}
+              >
+                {p.estado}
+              </span>,
             ])}
-            itemsPerPage={6}
+            loading={loading}
             currentPage={page}
             onPageChange={(p) => setPage(p)}
-            onView={(index) => abrirVer(proformas[index])}
-            onEdit={(index) => abrirEditar(proformas[index])}
-            onCustomAction={(index) => abrirCambioEstado(proformas[index])}
-            customActionIcon="ESTADO"
-            customActionTitle="Cambiar el estado de la proforma"
+            onView={(idx) => handleAction(idx, "view")}
+            onEdit={(idx) => handleAction(idx, "edit")}
+            onCustomAction={(idx) => handleAction(idx, "status")}
+            customActionIcon={<RefreshCcw size={16} />}
+            customActionTitle="Cambiar estado"
           />
-
         </div>
       </div>
 
-      {/* 🟢 MODAL NUEVO */}
       <ProformaModal
-        isOpen={openNewModal}
-        onClose={() => setOpenNewModal(false)}
-        mode="create"
-        onSave={handleCreate}
+        isOpen={isModalOpen}
+        onClose={() => { setIsModalOpen(false); setEditingProforma(null); }}
+        onSuccess={loadProformas}
+        editingProforma={editingProforma}
       />
 
-      {/* 🔵 EDITAR */}
-      <ProformaModal
-        isOpen={openEditModal}
-        onClose={() => setOpenEditModal(false)}
-        mode="edit"
-        initialData={proformaSeleccionada}
-        onSave={handleEdit}
-      />
-
-      {/* 👁‍🗨 VER DETALLE */}
       <ViewProformaModal
-        isOpen={openViewModal}
-        onClose={() => setOpenViewModal(false)}
-        proformaId={proformaSeleccionada?.id}
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        proformaId={selectedProforma?.id}
       />
 
-      {/* 🔄 MODAL CAMBIO DE ESTADO */}
-      {openEstadoModal && (
-        <div className="estado-modal-overlay">
-          <div className="estado-modal-card">
-            <h2>Cambiar Estado</h2>
-            <p className="estado-info">
-              Esta proforma pasará de <strong>EMITIDA</strong> a:
-            </p>
-
-            <select
-              value={nuevoEstado}
-              onChange={(e) => setNuevoEstado(e.target.value)}
-              style={{ width: "100%", height: "45px", fontSize: "16px", marginBottom: "15px" }}
-            >
-              <option value="ACEPTADA">✅ ACEPTADA (Venta Cerrada)</option>
-              <option value="ANULADA">❌ ANULADA (Cancelada)</option>
-            </select>
-
-            <label>Observaciones (opcional):</label>
-            <textarea
-              value={observacionesEstado}
-              onChange={(e) => setObservacionesEstado(e.target.value)}
-              placeholder="Motivo del cambio de estado..."
-            />
-
-            <div className="modal-buttons">
-              <button
-                className="btn-cancel"
-                onClick={() => setOpenEstadoModal(false)}
-              >
-                Cancelar
-              </button>
-              <button
-                className={`btn-confirm-estado ${
-                  nuevoEstado === "ACEPTADA" ? "aceptar" : "anular"
-                }`}
-                onClick={handleCambiarEstado}
-              >
-                {nuevoEstado === "ACEPTADA"
-                  ? "Aceptar Proforma"
-                  : "Anular Proforma"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <StatusModal
+        isOpen={isStatusModalOpen}
+        onClose={() => setIsStatusModalOpen(false)}
+        proforma={selectedProforma}
+        onSuccess={loadProformas}
+      />
     </div>
   );
 }

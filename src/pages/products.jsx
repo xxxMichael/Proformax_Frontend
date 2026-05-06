@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import toast from "react-hot-toast";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
@@ -45,11 +44,17 @@ export default function Productos() {
 
   const loadProductos = async () => {
     try {
-      const resp = await getProductos(1, 20, search, filtroTipo);
+      const resp = await getProductos(1, 100, search, filtroTipo);
       setProductos(resp.data);
     } catch (error) {
       console.error("Error cargando productos", error);
     }
+  };
+
+  const handleClearFilters = () => {
+    setSearch("");
+    setFiltroTipo("");
+    setTimeout(() => loadProductos(), 0);
   };
 
   // 🟡 EDITAR
@@ -73,12 +78,10 @@ export default function Productos() {
   const handleDelete = async () => {
     try {
       await deleteProducto(productoSeleccionado.id);
-      toast.success("Producto desactivado exitosamente");
       setOpenDeleteModal(false);
       loadProductos();
     } catch (error) {
       console.error("Error desactivando producto", error);
-      toast.error("Error al desactivar el producto");
     }
   };
 
@@ -95,12 +98,10 @@ export default function Productos() {
         aplicaIva: data.aplicaIva,
         estado: true,
       });
-      toast.success("Producto creado exitosamente");
       setOpenNewModal(false);
       loadProductos();
     } catch (error) {
       console.error("Error creando producto", error);
-      toast.error(error.response?.data?.message || "Error al crear el producto");
     }
   };
 
@@ -117,22 +118,13 @@ export default function Productos() {
         aplicaIva: data.aplicaIva,
         estado: true,
       });
-      toast.success("Producto actualizado exitosamente");
       setOpenEditModal(false);
       loadProductos();
     } catch (error) {
       console.error("Error actualizando producto", error);
-      toast.error(error.response?.data?.message || "Error al actualizar el producto");
     }
   };
 
-  const handleClearFilters = () => {
-    setSearch("");
-    setFiltroTipo("");
-    setTimeout(() => loadProductos(), 0);
-  };
-
-  // Badge de tipo con color
   const renderTipoBadge = (tipo) => (
     <span className={`badge-tipo ${tipo}`}>{tipo}</span>
   );
@@ -152,7 +144,7 @@ export default function Productos() {
               <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="Buscar por nombre o código..."
+                placeholder="Buscar producto por nombre o código..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyPress={(e) => e.key === "Enter" && loadProductos()}

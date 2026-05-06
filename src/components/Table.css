@@ -1,158 +1,135 @@
-/* =============================== */
-/*       CONTENEDOR GENERAL        */
-/* =============================== */
 .table-wrapper {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   width: 100%;
-  overflow-x: auto;
   margin-top: 20px;
 }
 
-/* =============================== */
-/*             TABLA               */
-/* =============================== */
-.custom-table {
+.custom-table-new {
   width: 100%;
   border-collapse: collapse;
-  background: #ffffff;
-  border-radius: 10px;
-  overflow: hidden;
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
-  color: #333;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
 }
 
-/* =============================== */
-/*             HEADER              */
-/* =============================== */
-.custom-table thead {
-  background: #d9d9d9;
-  color: #000;
-}
-
-.custom-table thead th {
-  padding: 14px 12px;
-  font-weight: 600;
+.custom-table-new th {
+  background-color: #f1f5f9; /* Gris muy suave profesional */
+  padding: 18px 15px;
+  color: #475569;
+  font-weight: 700;
   text-align: left;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.custom-table-new td {
+  padding: 16px 15px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
   font-size: 14px;
+  vertical-align: middle;
 }
 
-/* =============================== */
-/*              FILAS              */
-/* =============================== */
-.custom-table tbody tr {
-  background: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+.custom-table-new tr:hover {
+  background-color: #f8fafc;
 }
 
-.custom-table tbody tr:hover {
-  background: #f2f4f7;
-}
-
-/* =============================== */
-/*             CELDAS              */
-/* =============================== */
-.custom-table td {
-  padding: 12px 10px;
-  color: #444;
-}
-
-/* =============================== */
-/*        FILA SIN DATOS           */
-/* =============================== */
-.no-data {
-  text-align: center;
-  padding: 20px !important;
-  color: #777;
-  font-style: italic;
-}
-
-/* =============================== */
-/*            ACCIONES             */
-/* =============================== */
-.acciones {
+/* CONTENEDOR DE ACCIONES */
+.acciones-new {
   display: flex;
-  gap: 8px;
+  gap: 10px;
+  justify-content: flex-start;
   align-items: center;
 }
 
-/* =============================== */
-/*          BOTONES ACCIÓN         */
-/* =============================== */
-.accion-btn {
+/* BOTONES PREMIUM COLORIDOS */
+.btn-icon-action-premium {
+  width: 38px;
+  height: 38px;
   border: none;
-  cursor: pointer;
-  font-size: 28px;
-  background: transparent;
-  transition: 0.2s ease;
-  padding: 4px;
-}
-
-.accion-btn:hover {
-  transform: scale(1.25);
-}
-
-/* COLORES */
-.view-btn {
-  color: #4f46e5;
-}
-
-.edit-btn {
-  color: #0669cc;
-}
-
-.accion-btn-text {
-  background: #6366f1;
-  color: white;
-  border: none;
-  padding: 4px 10px;
-  border-radius: 6px;
-  font-size: 11px;
-  font-weight: 800;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.accion-btn-text:hover {
-  background: #4f46e5;
-  transform: translateY(-1px);
-}
-
-.delete-btn {
-  color: #dc2626;
-}
-
-.pagination {
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px;
-  margin-top: 15px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
 }
 
-.pagination button {
-  background: #4f46e5;
-  color: white;
-  padding: 6px 14px;
-  border: none;
-  border-radius: 6px;
+.btn-icon-action-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-icon-action-premium:active {
+  transform: translateY(0);
+}
+
+/* VARIANTES DE COLOR */
+.btn-icon-action-premium.view {
+  background-color: #e0f2fe;
+  color: #0ea5e9;
+}
+.btn-icon-action-premium.view:hover { background-color: #bae6fd; }
+
+.btn-icon-action-premium.edit {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+.btn-icon-action-premium.edit:hover { background-color: #fde68a; }
+
+.btn-icon-action-premium.custom {
+  background-color: #f3e8ff;
+  color: #9333ea;
+}
+.btn-icon-action-premium.custom:hover { background-color: #e9d5ff; }
+
+.btn-icon-action-premium.delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+.btn-icon-action-premium.delete:hover { background-color: #fecaca; }
+
+/* PAGINACIÓN */
+.table-pagination-new {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+  background-color: #fff;
+  border-top: 1px solid #f1f5f9;
+}
+
+.page-nav-btn {
+  padding: 8px 18px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
-  transition: 0.2s ease;
+  font-weight: 600;
+  color: #475569;
+  transition: all 0.2s;
 }
 
-.pagination button:disabled {
-  background: #c7c7c7;
+.page-nav-btn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.page-nav-btn:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.pagination button:hover:not(:disabled) {
-  background: #3730a3;
+.page-count-text {
+  font-size: 14px;
+  color: #64748b;
 }
 
-.page-info {
-  font-size: 14px;
-  color: #444;
+.page-count-text strong {
+  color: #0f172a;
 }

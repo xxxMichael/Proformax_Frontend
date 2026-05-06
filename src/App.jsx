@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import "./layout.css";
 import Login from "./pages/Login";
 import Home from "./pages/home";
 import Proformas from "./pages/proformas";
@@ -12,16 +13,7 @@ import Configuracion from "./pages/configuration";
 export default function App() {
   return (
     <BrowserRouter>
-      <Toaster 
-        position="top-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: '#333',
-            color: '#fff',
-          },
-        }}
-      />
+      <Toaster position="top-right" />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/home" element={<Home />} />
