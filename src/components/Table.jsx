@@ -14,7 +14,7 @@ export default function Table({
   currentPage = 1,
   onPageChange,
 }) {
-  // CÁLCULO DE PÁGINAS
+
   const totalPages = Math.ceil(rows.length / itemsPerPage) || 1;
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedRows = rows.slice(startIndex, startIndex + itemsPerPage);
@@ -86,6 +86,7 @@ export default function Table({
           ) : (
             <tr>
               <td colSpan={headers.length} className="no-data">
+
                 No hay registros disponibles.
               </td>
             </tr>
@@ -94,6 +95,7 @@ export default function Table({
       </table>
 
       {/* PAGINACIÓN */}
+
       <div className="table-pagination-new">
         <button
           className="page-nav-btn"
@@ -102,11 +104,9 @@ export default function Table({
         >
           ← Anterior
         </button>
-
         <span className="page-count-text">
           Página <strong>{currentPage}</strong> de <strong>{totalPages}</strong>
         </span>
-
         <button
           className="page-nav-btn"
           disabled={currentPage === totalPages}
