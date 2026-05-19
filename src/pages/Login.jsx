@@ -50,7 +50,7 @@ export default function Login() {
           <h2>Iniciar Sesión</h2>
 
           <form onSubmit={handleSubmit}>
-            <label>Email/Usuario:</label>
+            <label>Usuario:</label>
             <input
               type="text"
               name="username"

@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import ClientModal from "../components/ClientModal";
 import ViewModal from "../components/ViewModal";
 import DeleteModal from "../components/DeleteModal"; 
+import ErrorModal from "../components/ErrorModal";
 import Table from "../components/Table"; 
 
 import {
@@ -24,6 +25,7 @@ export default function Clientes() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [errorModal, setErrorModal] = useState({ isOpen: false, message: "" });
   const [page, setPage] = useState(1);
   const [clienteSeleccionado, setClienteSeleccionado] = useState(null);
 
@@ -71,6 +73,11 @@ export default function Clientes() {
       loadClientes();
     } catch (error) {
       console.error("Error eliminando cliente", error);
+      setOpenDeleteModal(false);
+      setErrorModal({
+        isOpen: true,
+        message: error.message || "No se puede eliminar el cliente porque tiene registros asociados."
+      });
     }
   };
 
@@ -211,6 +218,14 @@ export default function Clientes() {
         onConfirm={handleDelete}
         title="Eliminar Cliente"
         message="¿Seguro que deseas eliminar este cliente? Esta acción no se puede deshacer."
+      />
+
+      {/* 🚨 ERROR MODAL */}
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ isOpen: false, message: "" })}
+        title="No se puede eliminar"
+        message={errorModal.message}
       />
     </div>
   );

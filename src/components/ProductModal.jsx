@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import "./productModal.css";
 import { validarDuplicadoProducto } from "../services/productService";
+import { getConfig } from "../services/configService";
 
 // 🔹 Tipos disponibles
 const TIPOS_PRODUCTO = [
@@ -28,13 +29,27 @@ export default function ProductModal({
     precioBase: "",
     stockActual: "",
     aplicaIva: true,
+    estado: true,
   };
 
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
+  const [porcentajeIva, setPorcentajeIva] = useState(15);
 
   useEffect(() => {
     if (!isOpen) return;
+
+    const fetchConfig = async () => {
+      try {
+        const res = await getConfig();
+        if (res?.data?.porcentajeIvaVigente) {
+          setPorcentajeIva(res.data.porcentajeIvaVigente);
+        }
+      } catch (e) {
+        console.error("Error cargando configuración", e);
+      }
+    };
+    fetchConfig();
 
     // Limpiar errores al abrir el modal
     setErrors({});
@@ -50,6 +65,7 @@ export default function ProductModal({
         precioBase: initialData.precioBase ?? "",
         stockActual: initialData.stockActual ?? "",
         aplicaIva: initialData.aplicaIva ?? true,
+        estado: initialData.estado ?? true,
       });
     }
   }, [isOpen, initialData]);
@@ -243,9 +259,28 @@ export default function ProductModal({
                 checked={form.aplicaIva}
                 onChange={handleChange}
               />
-              <label htmlFor="aplicaIva">Aplica IVA (15%)</label>
+              <label htmlFor="aplicaIva">Aplica IVA ({porcentajeIva}%)</label>
             </div>
           </div>
+
+          {/* Estado */}
+          {mode === "edit" && (
+            <div>
+              <label>Estado del Producto:</label>
+              <div className="checkbox-row" style={{ marginTop: '8px' }}>
+                <input
+                  type="checkbox"
+                  name="estado"
+                  id="estadoProducto"
+                  checked={form.estado}
+                  onChange={handleChange}
+                />
+                <label htmlFor="estadoProducto" style={{ color: form.estado ? '#16a34a' : '#dc2626', fontWeight: 'bold' }}>
+                  {form.estado ? "ACTIVO" : "INACTIVO"}
+                </label>
+              </div>
+            </div>
+          )}
 
           {/* Descripción — fila completa */}
           <div className="full-width">

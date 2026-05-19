@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import ProductModal from "../components/ProductModal";
 import ViewProductModal from "../components/ViewProductModal";
 import DeleteModal from "../components/DeleteModal";
+import ErrorModal from "../components/ErrorModal";
 import Table from "../components/Table";
 
 import {
@@ -35,6 +36,7 @@ export default function Productos() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [errorModal, setErrorModal] = useState({ isOpen: false, message: "" });
   const [page, setPage] = useState(1);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
@@ -71,6 +73,13 @@ export default function Productos() {
 
   // ❌ DESACTIVAR
   const abrirEliminar = (producto) => {
+    if (!producto.estado) {
+      setErrorModal({
+        isOpen: true,
+        message: "Este producto ya se encuentra inactivo."
+      });
+      return;
+    }
     setProductoSeleccionado(producto);
     setOpenDeleteModal(true);
   };
@@ -82,6 +91,11 @@ export default function Productos() {
       loadProductos();
     } catch (error) {
       console.error("Error desactivando producto", error);
+      setOpenDeleteModal(false);
+      setErrorModal({
+        isOpen: true,
+        message: error.message || "No se puede desactivar este registro."
+      });
     }
   };
 
@@ -116,7 +130,7 @@ export default function Productos() {
         precioBase: parseFloat(data.precioBase),
         stockActual: data.tipo === "servicio" ? 0 : parseInt(data.stockActual),
         aplicaIva: data.aplicaIva,
-        estado: true,
+        estado: data.estado,
       });
       setOpenEditModal(false);
       loadProductos();
@@ -186,6 +200,7 @@ export default function Productos() {
               "Precio",
               "Stock",
               "IVA",
+              "Estado",
               "Acciones",
             ]}
             rows={productos.map((p, i) => [
@@ -196,6 +211,9 @@ export default function Productos() {
               `$${parseFloat(p.precioBase).toFixed(2)}`,
               p.tipo === "servicio" ? "N/A" : p.stockActual,
               p.aplicaIva ? "Sí" : "No",
+              <span key={`est-${p.id}`} className={`badge-tipo ${p.estado ? 'producto' : 'anulada'}`} style={p.estado ? {} : {backgroundColor: '#fee2e2', color: '#991b1b', border: '1px solid #f87171'}}>
+                {p.estado ? 'ACTIVO' : 'INACTIVO'}
+              </span>,
             ])}
             itemsPerPage={6}
             currentPage={page}
@@ -231,6 +249,7 @@ export default function Productos() {
             precioBase: productoSeleccionado.precioBase,
             stockActual: productoSeleccionado.stockActual,
             aplicaIva: productoSeleccionado.aplicaIva,
+            estado: productoSeleccionado.estado,
           }
         }
         onSave={handleEdit}
@@ -250,6 +269,14 @@ export default function Productos() {
         onConfirm={handleDelete}
         title="Desactivar Producto"
         message="¿Seguro que deseas desactivar este producto? El registro no se eliminará, solo cambiará a estado inactivo."
+      />
+
+      {/* 🚨 ERROR MODAL */}
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ isOpen: false, message: "" })}
+        title="No se puede desactivar"
+        message={errorModal.message}
       />
     </div>
   );

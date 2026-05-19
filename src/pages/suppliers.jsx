@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import SupplierModal from "../components/SupplierModal";
 import ViewSupplierModal from "../components/ViewSupplierModal";
 import DeleteModal from "../components/DeleteModal";
+import ErrorModal from "../components/ErrorModal";
 import Table from "../components/Table";
 
 import {
@@ -24,6 +25,7 @@ export default function Proveedores() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [openViewModal, setOpenViewModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [errorModal, setErrorModal] = useState({ isOpen: false, message: "" });
   const [page, setPage] = useState(1);
   const [proveedorSeleccionado, setProveedorSeleccionado] = useState(null);
 
@@ -70,6 +72,11 @@ export default function Proveedores() {
       loadProveedores();
     } catch (error) {
       console.error("Error desactivando proveedor", error);
+      setOpenDeleteModal(false);
+      setErrorModal({
+        isOpen: true,
+        message: error.message || "No se puede desactivar este registro."
+      });
     }
   };
 
@@ -215,6 +222,14 @@ export default function Proveedores() {
         onConfirm={handleDelete}
         title="Desactivar Proveedor"
         message="¿Seguro que deseas desactivar este proveedor? El registro no se eliminará, solo cambiará a estado inactivo."
+      />
+
+      {/* 🚨 ERROR MODAL */}
+      <ErrorModal
+        isOpen={errorModal.isOpen}
+        onClose={() => setErrorModal({ isOpen: false, message: "" })}
+        title="No se puede desactivar"
+        message={errorModal.message}
       />
     </div>
   );

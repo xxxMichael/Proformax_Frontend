@@ -5,6 +5,12 @@
   height: 100vh;
   transition: width 0.3s ease;
   padding: 15px;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  z-index: 100;
 }
 
 /* 🔥 Colapsado */

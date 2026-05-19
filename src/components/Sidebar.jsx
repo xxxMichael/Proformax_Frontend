@@ -18,6 +18,7 @@ export default function Sidebar() {
     return () => window.removeEventListener("logo_updated", handleLogoUpdate);
   }, []);
 
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
   const menu = [
     { name: "Inicio", path: "/home" },
     { name: "Proformas", path: "/proformas" },
@@ -27,6 +28,10 @@ export default function Sidebar() {
     { name: "Reportes", path: "/reports" },
     { name: "Configuración", path: "/configuration" },
   ];
+
+  if (user?.rol === "ADMIN") {
+    menu.push({ name: "Usuarios", path: "/users" });
+  }
 
   return (
     <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>

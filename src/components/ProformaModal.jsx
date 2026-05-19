@@ -6,6 +6,7 @@ import "./proformaModal.css";
 import { getClientes } from "../services/clientService";
 import { getProductos } from "../services/productService";
 import { createProforma, updateProforma } from "../services/proformaService";
+import { getConfig } from "../services/configService";
 import toast from "react-hot-toast";
 
 export default function ProformaModal({
@@ -33,15 +34,19 @@ export default function ProformaModal({
   const [showClientSearch, setShowClientSearch] = useState(false);
   const [clientFilter, setClientFilter] = useState("");
   const [searchPage, setSearchPage] = useState(1);
+  const [porcentajeIva, setPorcentajeIva] = useState(15);
   const resultsPerPage = 5;
 
   useEffect(() => {
     if (!isOpen) return;
     const cargarCatalogos = async () => {
       try {
-        const [rc, rp] = await Promise.all([getClientes(1, 100, ""), getProductos(1, 100, "")]);
+        const [rc, rp, resConfig] = await Promise.all([getClientes(1, 100, ""), getProductos(1, 100, ""), getConfig()]);
         setClientes(rc.data || []);
         setProductos(rp.data || []);
+        if (resConfig?.data?.porcentajeIvaVigente) {
+          setPorcentajeIva(resConfig.data.porcentajeIvaVigente);
+        }
       } catch (e) { console.error(e); }
     };
     cargarCatalogos();
@@ -76,7 +81,7 @@ export default function ProformaModal({
 
   const subtotal = form.detalles.reduce((acc, d) => acc + (Number(d.cantidad) * Number(d.precioUnitario) || 0), 0);
   const descuento = subtotal * (Number(form.porcentajeDescuento) / 100);
-  const iva = aplicaIva ? (subtotal - descuento) * 0.15 : 0;
+  const iva = aplicaIva ? (subtotal - descuento) * (porcentajeIva / 100) : 0;
   const total = subtotal - descuento + iva;
 
   const handleSave = async () => {
@@ -179,7 +184,15 @@ export default function ProformaModal({
                         setForm({...form, detalles: nuevos});
                       }}>
                         <option value="">Seleccionar...</option>
-                        {productos.map(p => <option key={p.id} value={p.id}>{p.nombre}</option>)}
+                        {productos.map(p => {
+                          const isSelected = p.id === parseInt(d.productoServicioId);
+                          if (p.estado === false && !isSelected) return null;
+                          return (
+                            <option key={p.id} value={p.id}>
+                              {p.nombre} {p.estado === false ? "(INACTIVO)" : ""}
+                            </option>
+                          );
+                        })}
                       </select>
                     </div>
                     <div className="input-group-stack flex-0-5">
@@ -225,7 +238,7 @@ export default function ProformaModal({
                   checked={aplicaIva}
                   onChange={(e) => setAplicaIva(e.target.checked)}
                 />
-                <span>Aplicar IVA 15%</span>
+                <span>Aplicar IVA {porcentajeIva}%</span>
               </label>
               <span className={`iva-amount ${!aplicaIva ? "iva-disabled" : ""}`}>
                 ${iva.toFixed(2)}

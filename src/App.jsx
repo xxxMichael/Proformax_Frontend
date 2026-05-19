@@ -9,6 +9,7 @@ import Productos from "./pages/products";
 import Proveedores from "./pages/suppliers";
 import Reportes from "./pages/reports";
 import Configuracion from "./pages/configuration";
+import Usuarios from "./pages/users";
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
         <Route path="/suppliers" element={<Proveedores />} />
         <Route path="/reports" element={<Reportes />} />
         <Route path="/configuration" element={<Configuracion />} />
+        <Route path="/users" element={<Usuarios />} />
       </Routes>
     </BrowserRouter>
   );

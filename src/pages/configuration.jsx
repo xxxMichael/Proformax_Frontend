@@ -18,6 +18,7 @@ export default function Configuration() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [logoPreview, setLogoPreview] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   
   const fileInputRef = useRef(null);
 
@@ -96,7 +97,6 @@ export default function Configuration() {
         <Header />
 
         <div className="config-container-new">
-          <h2 className="section-title">Perfil de la empresa</h2>
 
           <div className="config-content-grid">
             {/* COLUMNA IZQUIERDA: FORMULARIO */}
@@ -144,6 +144,15 @@ export default function Configuration() {
               </div>
 
               <div className="form-row-new" style={{ marginTop: '10px' }}>
+                <div className="form-group-new">
+                  <label>Correo Electrónico:</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={config.email || ""}
+                    onChange={handleChange}
+                  />
+                </div>
                 <div className="form-group-new" style={{ maxWidth: '200px' }}>
                   <label>IVA Vigente (%):</label>
                   <input

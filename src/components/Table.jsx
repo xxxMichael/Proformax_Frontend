@@ -10,7 +10,7 @@ export default function Table({
   onCustomAction,
   customActionIcon = null,
   customActionTitle = "Acción",
-  itemsPerPage = 10,
+  itemsPerPage = 5,
   currentPage = 1,
   onPageChange,
 }) {
