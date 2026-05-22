@@ -25,6 +25,7 @@ export default function Sidebar() {
     { name: "Clientes", path: "/clients" },
     { name: "Productos", path: "/products" },
     { name: "Proveedores", path: "/suppliers" },
+    { name: "Facturas", path: "/facturas" },
     { name: "Reportes", path: "/reports" },
     { name: "Configuración", path: "/configuration" },
   ];
