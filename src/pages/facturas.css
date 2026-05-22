@@ -1,0 +1,96 @@
+.facturas-content {
+  padding: 24px;
+  background-color: #f3f4f6;
+  min-height: calc(100vh - 64px);
+}
+
+/* Badge para el total de ítems */
+.badge-items {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+}
+
+/* Badge para fecha */
+.badge-fecha {
+  font-size: 13px;
+  color: #475569;
+  font-weight: 500;
+}
+
+/* Filtro select de proveedor */
+.filter-select-premium {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 14px;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 180px;
+}
+
+.filter-select-premium:hover {
+  border-color: #cbd5e1;
+}
+
+.filter-select-premium:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+/* Total en la tabla */
+.factura-total {
+  font-weight: 800;
+  color: #0f172a;
+  font-size: 14px;
+}
+
+/* Proveedor en la tabla */
+.factura-proveedor {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.factura-proveedor strong {
+  font-size: 13px;
+  color: #1e293b;
+}
+
+.factura-proveedor span {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* Botón Registrar Factura (acceso rápido desde productos) */
+.btn-factura-quick {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(5, 150, 105, 0.3);
+  white-space: nowrap;
+}
+
+.btn-factura-quick:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 15px -3px rgba(5, 150, 105, 0.4);
+}

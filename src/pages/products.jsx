@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 
@@ -28,6 +29,7 @@ const TIPOS = [
 ];
 
 export default function Productos() {
+  const navigate = useNavigate();
   const [productos, setProductos] = useState([]);
   const [search, setSearch] = useState("");
   const [filtroTipo, setFiltroTipo] = useState("");
@@ -187,6 +189,10 @@ export default function Productos() {
 
             <button className="btn-create-new" onClick={() => setOpenNewModal(true)}>
               <span>+</span> Nuevo Producto
+            </button>
+
+            <button className="btn-factura-quick" onClick={() => navigate("/facturas")}>
+              📄 Registrar Factura
             </button>
           </div>
 
