@@ -308,7 +308,7 @@ export default function Home() {
                       ) : (
                         <tr>
                           <td colSpan="6" style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>
-                            No hay proformas emitidas recientemente.
+                            📋 Aún no hay proformas registradas. ¡Crea tu primera proforma desde el menú lateral!
                           </td>
                         </tr>
                       )}
