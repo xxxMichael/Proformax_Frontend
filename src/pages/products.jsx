@@ -44,7 +44,7 @@ export default function Productos() {
 
   useEffect(() => {
     loadProductos();
-  }, []);
+  }, [filtroTipo]);
 
   const loadProductos = async () => {
     try {

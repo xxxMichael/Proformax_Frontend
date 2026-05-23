@@ -27,12 +27,13 @@ export default function Sidebar() {
     { name: "Proveedores", path: "/suppliers" },
     { name: "Facturas", path: "/facturas" },
     { name: "Reportes", path: "/reports" },
-    { name: "Configuración", path: "/configuration" },
   ];
 
   if (user?.rol === "ADMIN") {
     menu.push({ name: "Usuarios", path: "/users" });
   }
+
+  menu.push({ name: "Configuración", path: "/configuration" });
 
   return (
     <div className={`sidebar ${collapsed ? "collapsed" : ""}`}>

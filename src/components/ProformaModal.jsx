@@ -86,6 +86,17 @@ export default function ProformaModal({
 
   const handleSave = async () => {
     if (!form.clienteId) return toast.error("Debe seleccionar un cliente");
+
+    // Validar stock disponible para productos (no servicios)
+    for (const d of form.detalles) {
+      const prod = productos.find(p => p.id === parseInt(d.productoServicioId));
+      if (prod && prod.tipo !== "servicio" && Number(d.cantidad) > prod.stockActual) {
+        return toast.error(
+          `Stock insuficiente para "${prod.nombre}". Disponible: ${prod.stockActual}, solicitado: ${d.cantidad}`
+        );
+      }
+    }
+
     setLoading(true);
     try {
       const payload = {
@@ -250,7 +261,7 @@ export default function ProformaModal({
           </div>
           <div className="observations-card">
             <label>Observaciones:</label>
-            <textarea value={form.observaciones} onChange={e => setForm({...form, observaciones: e.target.value})} placeholder="Notas..." />
+            <textarea value={form.observaciones} onChange={e => setForm({...form, observaciones: e.target.value})} placeholder="Notas..." style={{ resize: 'none' }} />
           </div>
           <div className="actions-card">
             <button className="btn-save-full" onClick={handleSave} disabled={loading}><Save size={18} /> {loading ? "Procesando..." : isEditing ? "Actualizar" : "Generar"}</button>

@@ -23,9 +23,12 @@ export default function Facturas() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    loadFacturas();
     loadProveedores();
   }, []);
+
+  useEffect(() => {
+    loadFacturas();
+  }, [filtroProveedor]);
 
   const loadFacturas = async () => {
     setLoading(true);
@@ -52,12 +55,10 @@ export default function Facturas() {
   const handleClearFilters = () => {
     setSearch("");
     setFiltroProveedor("");
-    setTimeout(() => loadFacturas(), 0);
   };
 
   const handleFilterByProveedor = (e) => {
     setFiltroProveedor(e.target.value);
-    setTimeout(() => loadFacturas(), 0);
   };
 
   const formatDate = (dateStr) => {

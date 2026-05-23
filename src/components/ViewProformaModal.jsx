@@ -171,18 +171,16 @@ export default function ViewProformaModal({ isOpen, onClose, proformaId }) {
                 <table className="doc-items-table">
                   <thead>
                     <tr>
-                      <th style={{ width: '8%' }}>CANT.</th>
-                      <th style={{ width: '8%' }}>UNID.</th>
-                      <th style={{ width: '54%' }}>DETALLE</th>
-                      <th style={{ width: '15%' }}>P. UNIT.</th>
-                      <th style={{ width: '15%' }}>IMPORTE</th>
+                      <th style={{ width: '10%' }}>CANT.</th>
+                      <th style={{ width: '55%' }}>DETALLE</th>
+                      <th style={{ width: '17%' }}>P. UNIT.</th>
+                      <th style={{ width: '18%' }}>IMPORTE</th>
                     </tr>
                   </thead>
                   <tbody>
                     {items.map((item, index) => (
                       <tr key={index}>
                         <td className="text-center">{item.cantidad}</td>
-                        <td className="text-center">UNI</td>
                         <td>{item.producto?.nombre || `Producto #${item.productoServicioId}`}</td>
                         <td className="text-right">{Number(item.precioUnitario || 0).toFixed(2)}</td>
                         <td className="text-right">{(Number(item.cantidad || 0) * Number(item.precioUnitario || 0)).toFixed(2)}</td>
@@ -190,7 +188,6 @@ export default function ViewProformaModal({ isOpen, onClose, proformaId }) {
                     ))}
                     {emptyRows.map((_, index) => (
                       <tr key={`empty-${index}`} className="empty-row">
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
