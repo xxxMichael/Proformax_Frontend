@@ -167,7 +167,7 @@ export default function ProformaModal({
                   <label>Fecha de Validez:</label>
                   <div className="input-with-icon">
                     <Calendar size={14} className="input-icon" />
-                    <input type="date" name="fechaValidez" value={form.fechaValidez} onChange={e => setForm({...form, fechaValidez: e.target.value})} />
+                    <input type="date" name="fechaValidez" value={form.fechaValidez} readOnly disabled style={{ backgroundColor: '#f3f4f6', cursor: 'not-allowed', color: '#6b7280' }} />
                   </div>
                 </div>
                 <div className="input-group-stack">
