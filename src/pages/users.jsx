@@ -16,6 +16,7 @@ export default function Usuarios() {
   const [usuarios, setUsuarios] = useState([]);
   const [filtroRol, setFiltroRol] = useState("");
   const [filtroEstado, setFiltroEstado] = useState("");
+  const [filtroBusqueda, setFiltroBusqueda] = useState("");
 
   const [openNewModal, setOpenNewModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -37,7 +38,7 @@ export default function Usuarios() {
   const loadUsuarios = async () => {
     setLoading(true);
     try {
-      const resp = await getUsuarios(page, 10, filtroRol, filtroEstado);
+      const resp = await getUsuarios(page, 10, filtroRol, filtroEstado, filtroBusqueda);
       setUsuarios(resp.data || []);
     } catch (error) {
       console.error("Error cargando usuarios", error);
@@ -50,6 +51,7 @@ export default function Usuarios() {
   const handleClearFilters = () => {
     setFiltroRol("");
     setFiltroEstado("");
+    setFiltroBusqueda("");
     setPage(1);
     setTimeout(() => loadUsuarios(), 0);
   };
@@ -178,8 +180,15 @@ export default function Usuarios() {
               <span className="search-icon">🔍</span>
               <input
                 type="text"
-                placeholder="Filtrado por rol o estado..."
-                disabled
+                placeholder="Buscar por usuario..."
+                value={filtroBusqueda}
+                onChange={(e) => setFiltroBusqueda(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setPage(1);
+                    loadUsuarios();
+                  }
+                }}
               />
             </div>
 

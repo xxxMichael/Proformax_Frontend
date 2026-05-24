@@ -11,11 +11,12 @@ const getHeaders = () => {
 };
 
 // GET /usuarios
-export const getUsuarios = async (page = 1, limit = 20, rol = "", estado = "") => {
+export const getUsuarios = async (page = 1, limit = 20, rol = "", estado = "", search = "") => {
   try {
     const params = { page, limit };
     if (rol) params.rol = rol;
     if (estado !== "") params.estado = estado;
+    if (search) params.search = search;
 
     const { data } = await axios.get(`${API_URL}/usuarios`, {
       headers: getHeaders(),
