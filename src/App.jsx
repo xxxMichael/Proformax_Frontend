@@ -2,6 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import "./layout.css";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import Home from "./pages/home";
 import Proformas from "./pages/proformas";
 import Clientes from "./pages/clients";
@@ -23,6 +25,18 @@ export default function App() {
         <Route path="/" element={
           <ProtectedRoute allowLoggedUsersToRedirect>
             <Login />
+          </ProtectedRoute>
+        } />
+        
+        <Route path="/forgot-password" element={
+          <ProtectedRoute allowLoggedUsersToRedirect>
+            <ForgotPassword />
+          </ProtectedRoute>
+        } />
+
+        <Route path="/reset-password" element={
+          <ProtectedRoute allowLoggedUsersToRedirect>
+            <ResetPassword />
           </ProtectedRoute>
         } />
 

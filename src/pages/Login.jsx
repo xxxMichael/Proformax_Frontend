@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { Eye, EyeOff } from "lucide-react";
 import "./login.css";
@@ -82,6 +83,12 @@ export default function Login() {
             <button type="submit" disabled={loading}>
               {loading ? "Cargando..." : "Iniciar Sesión"}
             </button>
+            
+            <div style={{ textAlign: 'center', marginTop: '20px' }}>
+              <Link to="/forgot-password" style={{ color: '#3b82f6', textDecoration: 'none', fontSize: '14px' }}>
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
           </form>
         </div>
       </div>

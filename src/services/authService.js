@@ -14,3 +14,26 @@ export const loginRequest = async (username, password) => {
     throw error.response?.data || { message: "Error desconocido" };
   }
 };
+
+export const forgotPasswordRequest = async (email) => {
+  try {
+    const { data } = await axios.post(`${API_URL}/auth/forgot-password`, {
+      email,
+    });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: "Error al solicitar recuperación" };
+  }
+};
+
+export const resetPasswordRequest = async (token, password) => {
+  try {
+    const { data } = await axios.post(`${API_URL}/auth/reset-password`, {
+      token,
+      password,
+    });
+    return data;
+  } catch (error) {
+    throw error.response?.data || { message: "Error al restablecer contraseña" };
+  }
+};
