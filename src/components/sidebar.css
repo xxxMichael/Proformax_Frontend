@@ -57,11 +57,24 @@
 
 /* Links */
 .sidebar-menu a {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 12px;
   color: white;
   text-decoration: none;
   font-size: 16px;
+}
+
+.close-mobile-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  position: absolute;
+  right: 15px;
+  top: 15px;
 }
 
 /* ✨ Hover */
@@ -78,4 +91,42 @@
 .sidebar-menu li,
 .sidebar-menu a {
   transition: all 0.2s ease;
+}
+
+/* --- OVERLAY PARA MÓVILES --- */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.5);
+  z-index: 90;
+  backdrop-filter: blur(2px);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    width: 260px !important;
+    z-index: 100;
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+    box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+  }
+
+  .toggle-btn {
+    display: none; /* Oculta botón de colapsar en móvil */
+  }
+
+  .close-mobile-btn {
+    display: block;
+  }
 }

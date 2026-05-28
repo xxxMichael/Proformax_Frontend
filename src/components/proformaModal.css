@@ -500,3 +500,30 @@
   background: #2563eb;
   color: white;
 }
+
+/* RESPONSIVE PROFORMA MODAL */
+@media (max-width: 768px) {
+  .proforma-modal-premium {
+    flex-direction: column;
+    height: 95vh;
+    overflow-y: auto;
+  }
+  
+  .modal-form-side {
+    border-right: none;
+    border-bottom: 2px solid #f1f5f9;
+  }
+  
+  .form-row-2 {
+    grid-template-columns: 1fr;
+  }
+  
+  .item-row-card {
+    flex-wrap: wrap;
+  }
+  
+  .btn-remove-item {
+    width: 100%;
+    margin-top: 10px;
+  }
+}
