@@ -1,0 +1,100 @@
+.login-container {
+  display: flex;
+  height: 100vh;
+  background: #1e1e1e;
+}
+
+/* Sidebar */
+.login-sidebar {
+  width: 260px;
+  background: #0d2b52;
+  color: white;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 30px;
+  font-size: 22px; /* más grande */
+  font-weight: bold;
+}
+
+/* Contenido */
+.login-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #d9d9d9;
+}
+
+/* 🔥 SOLO AGRANDAMOS, sin caja */
+.login-box {
+  width: 600px; /* más ancho */
+  text-align: center;
+}
+
+/* Título */
+.login-box h2 {
+  font-size: 32px; /* más grande */
+  margin-bottom: 30px;
+}
+
+/* Labels */
+.login-box label {
+  display: block;
+  text-align: left;
+  font-size: 18px; /* 🔥 más grande */
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+/* Inputs */
+.login-box input {
+  width: 100%;
+  padding: 14px; /* más alto */
+  margin-bottom: 25px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 16px; /* texto más grande */
+}
+
+/* Password */
+.password-container {
+  position: relative;
+}
+
+.password-container .eye {
+  position: absolute;
+  right: 12px;
+  top: 14px;
+  cursor: pointer;
+  color: #555;
+  display: flex;
+  align-items: center;
+}
+
+.password-container .eye:hover {
+  color: #2a7f7f;
+}
+
+/* Botón */
+.login-box button {
+  width: 100%;
+  padding: 14px;
+  background: #2a7f7f;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px; /* más grande */
+  cursor: pointer;
+}
+
+.login-box button:hover {
+  background: #256b6b;
+}
+
+/* Error */
+.error {
+  color: red;
+  font-size: 14px;
+  margin-bottom: 10px;
+}

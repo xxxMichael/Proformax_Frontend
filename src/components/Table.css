@@ -1,0 +1,135 @@
+.table-wrapper {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  margin-top: 20px;
+}
+
+.custom-table-new {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table-new th {
+  background-color: #f1f5f9; /* Gris muy suave profesional */
+  padding: 18px 15px;
+  color: #475569;
+  font-weight: 700;
+  text-align: left;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.custom-table-new td {
+  padding: 16px 15px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #1e293b;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.custom-table-new tr:hover {
+  background-color: #f8fafc;
+}
+
+/* CONTENEDOR DE ACCIONES */
+.acciones-new {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+/* BOTONES PREMIUM COLORIDOS */
+.btn-icon-action-premium {
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn-icon-action-premium:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.btn-icon-action-premium:active {
+  transform: translateY(0);
+}
+
+/* VARIANTES DE COLOR */
+.btn-icon-action-premium.view {
+  background-color: #e0f2fe;
+  color: #0ea5e9;
+}
+.btn-icon-action-premium.view:hover { background-color: #bae6fd; }
+
+.btn-icon-action-premium.edit {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+.btn-icon-action-premium.edit:hover { background-color: #fde68a; }
+
+.btn-icon-action-premium.custom {
+  background-color: #f3e8ff;
+  color: #9333ea;
+}
+.btn-icon-action-premium.custom:hover { background-color: #e9d5ff; }
+
+.btn-icon-action-premium.delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+.btn-icon-action-premium.delete:hover { background-color: #fecaca; }
+
+/* PAGINACIÓN */
+.table-pagination-new {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 20px;
+  background-color: #fff;
+  border-top: 1px solid #f1f5f9;
+}
+
+.page-nav-btn {
+  padding: 8px 18px;
+  border: 1px solid #e2e8f0;
+  background: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: #475569;
+  transition: all 0.2s;
+}
+
+.page-nav-btn:hover:not(:disabled) {
+  background: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.page-nav-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-count-text {
+  font-size: 14px;
+  color: #64748b;
+}
+
+.page-count-text strong {
+  color: #0f172a;
+}

@@ -1,0 +1,460 @@
+/* ── Overlay ── */
+.view-proforma-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* ── Contenedor principal ── */
+.view-proforma-container {
+  background: #f1f5f9;
+  width: 100%;
+  max-width: 900px;
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  max-height: 95vh;
+}
+
+/* ── Loader ── */
+.loader-container {
+  padding: 60px;
+  text-align: center;
+  font-size: 16px;
+  color: #64748b;
+}
+
+/* ── Header Actions (Outside Print Area) ── */
+.view-modal-actions {
+  padding: 16px 24px;
+  background: #1e293b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-status h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-print {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-print:hover {
+  background: #2563eb;
+}
+
+.btn-close-view {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.btn-close-view:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ── Printable Document Area ── */
+.printable-document {
+  background: white;
+  margin: 0 auto;
+  padding: 40px;
+  width: 100%;
+  max-width: 850px;
+  overflow-y: auto;
+  color: #000;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ── Estructura Header del Documento ── */
+.doc-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.doc-company-info {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.doc-company-title {
+  font-size: 24px;
+  font-weight: 900;
+  color: #1e3a8a; /* Dark Blue or Black depending on pref */
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 1px;
+}
+
+.doc-company-details {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.doc-logo {
+  max-width: 120px;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.doc-logo-placeholder {
+  width: 100px;
+  height: 60px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #94a3b8;
+  border: 1px dashed #cbd5e1;
+}
+
+.doc-address-text {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #333;
+}
+
+.doc-address-text p {
+  margin: 0 0 4px 0;
+}
+
+/* ── Bloque RUC y Número ── */
+.doc-meta-box {
+  width: 280px;
+  border: 2px solid #000;
+  border-radius: 8px;
+  text-align: center;
+  overflow: hidden;
+  background: white;
+}
+
+.doc-ruc-line {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 8px;
+  border-bottom: 2px solid #000;
+}
+
+.doc-proforma-title {
+  background: #000;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 8px;
+}
+
+.doc-proforma-number {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 15px;
+  font-size: 18px;
+  font-weight: bold;
+  border-bottom: 2px solid #000;
+}
+
+.doc-red-number {
+  color: #dc2626;
+}
+
+.doc-date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  text-align: center;
+}
+
+.date-header {
+  font-size: 10px;
+  font-weight: bold;
+  background: #000;
+  color: white;
+  padding: 4px;
+  border-right: 1px solid white;
+}
+
+.date-header:last-child { border-right: none; }
+
+.date-cell {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 6px;
+  border-right: 1px solid #000;
+}
+
+.date-cell:last-child { border-right: none; }
+
+/* ── Información del Cliente ── */
+.doc-client-info {
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+.client-line, .client-line-split {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: baseline;
+}
+
+.client-line-split {
+  gap: 20px;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+
+.client-label {
+  font-weight: bold;
+  margin-right: 8px;
+  white-space: nowrap;
+}
+
+.client-value {
+  flex-grow: 1;
+  border-bottom: 1px dashed #000;
+  padding-bottom: 2px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.doc-intro-text {
+  font-size: 11px;
+  line-height: 1.4;
+  margin-top: 10px;
+  margin-bottom: 0;
+  color: #333;
+}
+
+/* ── Tabla de Detalles ── */
+.doc-table-container {
+  margin-bottom: 20px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.doc-items-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.doc-items-table th {
+  background: #e2e8f0;
+  border-bottom: 2px solid #000;
+  border-right: 1px solid #000;
+  padding: 8px 5px;
+  font-size: 12px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.doc-items-table th:last-child {
+  border-right: none;
+}
+
+.doc-items-table td {
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #cbd5e1;
+  padding: 6px 8px;
+  font-size: 12px;
+  vertical-align: middle;
+}
+
+.doc-items-table td:last-child {
+  border-right: none;
+}
+
+.doc-items-table tr.empty-row td {
+  height: 24px;
+}
+
+.doc-items-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+/* ── Footer ── */
+.doc-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 10px;
+}
+
+.doc-signature-box {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-right: 40px;
+}
+
+.doc-obs-box {
+  font-size: 11px;
+  color: #333;
+  margin-bottom: 30px;
+  border: 1px dashed #cbd5e1;
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.doc-signature-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 250px;
+}
+
+.doc-signature-line {
+  width: 100%;
+  border-top: 1px solid #000;
+  margin-bottom: 5px;
+}
+
+.doc-signature-text {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* ── Totales ── */
+.doc-totals-box {
+  width: 250px;
+  border: 2px solid #000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.doc-total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+.doc-total-row:last-child {
+  border-bottom: none;
+}
+
+.doc-total-row span {
+  font-weight: bold;
+}
+
+.doc-total-value {
+  text-align: right;
+}
+
+.doc-total-final {
+  background: #e2e8f0;
+  font-size: 16px;
+  border-top: 2px solid #000;
+}
+
+/* ── Status badges ── */
+.status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.status-badge.emitida { background: #3b82f6; color: white; }
+.status-badge.aceptada { background: #10b981; color: white; }
+.status-badge.anulada { background: #ef4444; color: white; }
+
+/* ── Estilos de Impresión ── */
+@media print {
+  /* Ocultar elementos de UI no imprimibles */
+  body * {
+    visibility: hidden;
+  }
+  
+  .view-proforma-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    background: transparent !important;
+  }
+  
+  .view-proforma-container {
+    box-shadow: none;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .printable-document,
+  .printable-document * {
+    visibility: visible;
+  }
+  
+  .printable-document {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+
+  /* Asegurarse que los colores se impriman (Chrome/Safari) */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

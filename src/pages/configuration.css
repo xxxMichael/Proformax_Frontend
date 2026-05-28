@@ -1,0 +1,258 @@
+.main {
+  width: 100%;
+}
+
+.configuracion-content {
+  padding: 25px;
+}
+
+.configuracion-content h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: #222;
+}
+
+/* ============================
+   PERFIL CARD
+   ============================ */
+.config-card {
+  background: white;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.config-card h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* ============================
+   GRID DE CAMPOS + LOGO
+   ============================ */
+.config-layout {
+  display: grid;
+  grid-template-columns: 1fr 220px;
+  gap: 30px;
+  align-items: start;
+}
+
+/* Formulario */
+.config-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.config-form-grid .full-width {
+  grid-column: 1 / -1;
+}
+
+.config-form-grid label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #444;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.config-form-grid input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.config-form-grid input:focus {
+  outline: none;
+  border-color: #19857b;
+  box-shadow: 0 0 0 2px rgba(25, 133, 123, 0.15);
+}
+
+.config-form-grid input:disabled {
+  background: #f0f0f0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* ============================
+   SECCIÓN IVA
+   ============================ */
+.config-iva-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.config-iva-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.iva-input-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 280px;
+}
+
+.iva-input-row input {
+  width: 100px;
+  padding: 10px 12px;
+  border-radius: 7px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  font-family: inherit;
+}
+
+.iva-input-row input:focus {
+  outline: none;
+  border-color: #19857b;
+  box-shadow: 0 0 0 2px rgba(25, 133, 123, 0.15);
+}
+
+.iva-input-row .iva-symbol {
+  font-size: 18px;
+  font-weight: 700;
+  color: #555;
+}
+
+/* ============================
+   LOGO / IMAGEN LATERAL
+   ============================ */
+.config-logo-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-preview {
+  width: 180px;
+  height: 160px;
+  border-radius: 10px;
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #aaa;
+  font-size: 13px;
+}
+
+.logo-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.btn-upload {
+  background: #19857b;
+  color: white;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.btn-upload:hover {
+  background: #14706a;
+}
+
+/* ============================
+   BOTONES FOOTER
+   ============================ */
+.config-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.config-buttons .btn-cancel {
+  padding: 10px 28px;
+  border-radius: 8px;
+  background: #e0e0e0;
+  border: 1px solid #bbb;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.config-buttons .btn-save {
+  padding: 10px 28px;
+  border-radius: 8px;
+  background: #19857b;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.config-buttons .btn-save:hover {
+  background: #14706a;
+}
+
+/* ============================
+   MENSAJES
+   ============================ */
+.config-success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeInMsg 0.3s ease;
+}
+
+.config-error {
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  font-weight: 500;
+  animation: fadeInMsg 0.3s ease;
+}
+
+@keyframes fadeInMsg {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.config-loading {
+  text-align: center;
+  padding: 60px 0;
+  color: #888;
+  font-size: 16px;
+}
+
+/* ============================
+   ERROR CAMPO
+   ============================ */
+.field-error {
+  color: #e53935;
+  font-size: 12px;
+  margin-top: 3px;
+}
