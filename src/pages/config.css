@@ -139,3 +139,31 @@
 .btn-cancel-new:hover {
   opacity: 0.8;
 }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .config-content-grid {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .config-image-section {
+    order: -1; /* Pone la imagen primero */
+    width: 100%;
+  }
+
+  .form-row-new {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .config-actions-new {
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 40px;
+  }
+
+  .btn-save-new, .btn-cancel-new {
+    width: 100%;
+  }
+}

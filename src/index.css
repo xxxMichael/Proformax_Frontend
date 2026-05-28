@@ -177,3 +177,52 @@ body {
   font-size: 20px;
   line-height: 0;
 }
+
+/* RESPONSIVE GLOBAL */
+@media (max-width: 768px) {
+  .premium-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .premium-filter-bar .search-box {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .premium-filter-bar .filter-select-group {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .premium-filter-bar .filter-select-group select {
+    width: 100%;
+  }
+
+  .premium-filter-bar .btn-clear-filters,
+  .premium-filter-bar .btn-create-new {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* MODALES GENÉRICOS (Clientes, Productos, Proveedores, etc.) */
+  div[class*="modal-container"] {
+    width: 95% !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    padding: 15px !important;
+  }
+  
+  div[class*="form-grid"] {
+    grid-template-columns: 1fr !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .client-type-box {
+    grid-template-columns: 1fr !important;
+  }
+}

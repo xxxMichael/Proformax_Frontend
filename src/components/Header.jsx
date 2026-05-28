@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Menu } from "lucide-react";
+import { useLayout } from "../context/LayoutContext";
 import "./header.css";
 import imagenDefault from "../images/arte_parquet_gg.jpg";
 
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { toggleMobileMenu } = useLayout();
   const [openMenu, setOpenMenu] = useState(false);
   const [logo, setLogo] = useState(
     () => localStorage.getItem("empresa_logo") || imagenDefault
@@ -28,6 +31,8 @@ export default function Header() {
     "/suppliers": "Proveedores",
     "/reports": "Reportes",
     "/configuration": "Configuración",
+    "/users": "Usuarios",
+    "/facturas": "Facturas",
   };
 
   const title = pageTitles[location.pathname] || "Página";
@@ -40,7 +45,12 @@ export default function Header() {
 
   return (
     <div className="header">
-      <h1 className="header-title">{title}</h1>
+      <div className="header-left">
+        <button className="mobile-menu-btn" onClick={toggleMobileMenu}>
+          <Menu size={24} />
+        </button>
+        <h1 className="header-title">{title}</h1>
+      </div>
 
       <div className="header-profile" onClick={() => setOpenMenu(!openMenu)}>
         <img src={logo} alt="logo" className="profile-img" />

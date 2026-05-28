@@ -1,7 +1,7 @@
 .table-wrapper {
   background: white;
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto; /* IMPORTANTE: Permite scroll horizontal en móviles */
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   width: 100%;
   margin-top: 20px;
@@ -132,4 +132,17 @@
 
 .page-count-text strong {
   color: #0f172a;
+}
+
+/* RESPONSIVE TABLE */
+@media (max-width: 768px) {
+  .custom-table-new th, .custom-table-new td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+  .table-pagination-new {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+  }
 }
