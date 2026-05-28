@@ -13,6 +13,7 @@ export default function UserModal({
     username: "",
     password: "",
     rol: "vendedor",
+    email: "",
   };
 
   const [form, setForm] = useState(emptyForm);
@@ -29,6 +30,7 @@ export default function UserModal({
         username: initialData.username || "",
         password: "", // En edición la contraseña es opcional
         rol: initialData.rol || "vendedor",
+        email: initialData.email || "",
       });
     }
   }, [isOpen, initialData, mode]);
@@ -57,6 +59,10 @@ export default function UserModal({
 
     if (!form.rol) {
       newErrors.rol = "Seleccione un rol";
+    }
+
+    if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+      newErrors.email = "Formato de correo inválido";
     }
 
     setErrors(newErrors);
@@ -92,6 +98,18 @@ export default function UserModal({
               disabled={mode === "edit"} // El username no suele cambiar, o si cambia se habilita
             />
             {errors.username && <span className="error">{errors.username}</span>}
+          </div>
+
+          <div className="user-form-group">
+            <label>Correo Electrónico:</label>
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              placeholder="Ej: usuario@empresa.com"
+            />
+            {errors.email && <span className="error">{errors.email}</span>}
           </div>
 
           <div className="user-form-group">

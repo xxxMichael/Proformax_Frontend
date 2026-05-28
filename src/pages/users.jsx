@@ -63,6 +63,7 @@ export default function Usuarios() {
         username: data.username,
         password: data.password,
         rol: data.rol,
+        email: data.email,
       });
       setOpenNewModal(false);
       toast.success("Usuario creado exitosamente");
@@ -86,6 +87,7 @@ export default function Usuarios() {
       const payload = {
         username: data.username,
         rol: data.rol,
+        email: data.email,
       };
       if (data.password) {
         payload.password = data.password;
