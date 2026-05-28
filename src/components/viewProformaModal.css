@@ -458,3 +458,46 @@
     print-color-adjust: exact !important;
   }
 }
+
+/* RESPONSIVE VIEW MODAL */
+@media (max-width: 768px) {
+  .view-proforma-container {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .doc-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .doc-company-info {
+    padding-right: 0;
+  }
+  
+  .doc-meta-box {
+    width: 100%;
+  }
+  
+  .doc-footer {
+    flex-direction: column;
+    gap: 20px;
+    align-items: stretch;
+  }
+  
+  .doc-signature-box {
+    padding-right: 0;
+  }
+  
+  .doc-signature-area {
+    width: 100%;
+  }
+  
+  .doc-totals-box {
+    width: 100%;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+}

@@ -38,3 +38,16 @@
 .search-box {
   flex: 2; /* Que el buscador sea más largo */
 }
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 768px) {
+  .clientes-content,
+  .proformas-content,
+  .productos-content,
+  .proveedores-content,
+  .facturas-content,
+  .config-content,
+  .config-container-new {
+    padding: 15px;
+  }
+}

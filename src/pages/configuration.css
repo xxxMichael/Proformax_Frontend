@@ -256,3 +256,31 @@
   font-size: 12px;
   margin-top: 3px;
 }
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 768px) {
+  .config-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .config-logo-area {
+    order: -1; /* Pone el logo arriba del formulario en móviles */
+    margin-bottom: 20px;
+  }
+  
+  .logo-preview {
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  .config-buttons {
+    flex-direction: column;
+  }
+  
+  .config-buttons button {
+    width: 100%;
+  }
+}
