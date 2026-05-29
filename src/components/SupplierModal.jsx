@@ -2,34 +2,10 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import "./supplierModal.css";
 import { validarDuplicadoProveedor } from "../services/supplierService";
+import { validarRucEcuatoriano } from "../utils/rucValidator";
 
 // 🔹 VALIDADORES
-const validarRuc = (ruc) => {
-  if (!/^\d{13}$/.test(ruc)) return false;
-
-  const provincia = parseInt(ruc.substring(0, 2));
-  if (provincia < 1 || provincia > 24) return false;
-
-  const tercerDigito = parseInt(ruc[2]);
-  if (tercerDigito >= 6) return false;
-
-  let total = 0;
-  for (let i = 0; i < 9; i++) {
-    let num = parseInt(ruc[i]);
-    if (i % 2 === 0) {
-      num *= 2;
-      if (num > 9) num -= 9;
-    }
-    total += num;
-  }
-
-  let verificador = 10 - (total % 10);
-  if (verificador === 10) verificador = 0;
-
-  if (verificador !== parseInt(ruc[9])) return false;
-
-  return ruc.substring(10) === "001";
-};
+// El validador antiguo de RUC fue reemplazado por validarRucEcuatoriano
 
 const validarCedula = (cedula) => {
   if (!/^\d{10}$/.test(cedula)) return false;
@@ -92,7 +68,7 @@ export default function SupplierModal({
     setErrors({});
 
     if (mode === "create") {
-      setForm({ ...emptyForm });
+      setForm({ ...emptyForm, ...(initialData || {}) });
     } else if (initialData) {
       setForm({
         idType: initialData.idType || "RUC",
@@ -121,8 +97,11 @@ export default function SupplierModal({
     let newErrors = {};
 
     // 🔹 IDENTIFICACIÓN
-    if (form.idType === "RUC" && !validarRuc(form.identificacion)) {
-      newErrors.identificacion = "RUC inválido (13 dígitos, termina en 001)";
+    if (form.idType === "RUC") {
+      const rucValido = validarRucEcuatoriano(form.identificacion);
+      if (!rucValido.valido) {
+        newErrors.identificacion = `RUC inválido: ${rucValido.mensaje}`;
+      }
     }
 
     if (form.idType === "Cédula" && !validarCedula(form.identificacion)) {

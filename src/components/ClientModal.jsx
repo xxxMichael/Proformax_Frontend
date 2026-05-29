@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import "./clientModal.css";
 import { validarDuplicadoCliente } from "../services/clientService";
+import { validarRucEcuatoriano } from "../utils/rucValidator";
 
 // 🔹 VALIDADORES
 const validarCedula = (cedula) => {
@@ -29,14 +30,7 @@ const validarCedula = (cedula) => {
   return verificador === parseInt(cedula[9]);
 };
 
-const validarRuc = (ruc) => {
-  if (!/^\d{13}$/.test(ruc)) return false;
-
-  const cedula = ruc.substring(0, 10);
-  const sufijo = ruc.substring(10);
-
-  return validarCedula(cedula) && sufijo === "001";
-};
+// El validador antiguo de RUC fue reemplazado por validarRucEcuatoriano
 
 const validarPasaporte = (pasaporte) => {
   return /^[A-Za-z0-9]{5,15}$/.test(pasaporte);
@@ -113,8 +107,11 @@ export default function ClientModal({
       newErrors.idNumber = "Cédula ecuatoriana inválida";
     }
 
-    if (form.idType === "RUC" && !validarRuc(form.idNumber)) {
-      newErrors.idNumber = "RUC inválido (debe terminar en 001)";
+    if (form.idType === "RUC") {
+      const rucValido = validarRucEcuatoriano(form.idNumber);
+      if (!rucValido.valido) {
+        newErrors.idNumber = `RUC inválido: ${rucValido.mensaje}`;
+      }
     }
 
     if (form.idType === "Pasaporte" && !validarPasaporte(form.idNumber)) {
