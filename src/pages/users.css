@@ -1,8 +1,10 @@
 .usuarios-content {
   padding: 30px 40px;
+  width: 100%;
   max-width: 1400px;
   margin: 0 auto;
   animation: fadeIn 0.3s ease-out;
+  box-sizing: border-box;
 }
 
 .usuarios-content .premium-filter-bar {
@@ -155,4 +157,17 @@
   border-radius: 12px;
   font-weight: 600;
   cursor: pointer;
+}
+
+/* RESPONSIVE USUARIOS */
+@media (max-width: 768px) {
+  .usuarios-content {
+    padding: 15px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .usuarios-content .filter-select-premium {
+    width: 100% !important;
+  }
 }

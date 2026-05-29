@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 
 import { analizarFactura, confirmarFactura } from "../services/facturaService";
 import { getProductos } from "../services/productService";
+import { createProveedor, patchProveedor } from "../services/supplierService";
+import SupplierModal from "./SupplierModal";
 import "./facturaModal.css";
 
 const ALLOWED_TYPES = [
@@ -36,6 +38,9 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
   const [fechaEmision, setFechaEmision] = useState("");
   const [items, setItems] = useState([]);
   const [productos, setProductos] = useState([]);
+
+  // Estado para el modal de crear proveedor
+  const [isSupplierModalOpen, setIsSupplierModalOpen] = useState(false);
 
   const fileInputRef = useRef(null);
 
@@ -126,7 +131,7 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
         (resp.datosExtraidos?.items || []).map((item, idx) => ({
           ...item,
           _key: idx,
-          productoId: null,
+          productoId: item.productoId || "NEW", // NEW si no viene productoId o es nulo
         }))
       );
 
@@ -179,6 +184,43 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
       toast.error(e.message || "Error al confirmar la factura");
     } finally {
       setConfirming(false);
+    }
+  };
+
+  const handleSaveNewSupplier = async (form) => {
+    try {
+      const resp = await createProveedor(form);
+      toast.success("Proveedor creado exitosamente");
+      const nuevoProveedor = resp.data || resp;
+      
+      // Añadirlo a la lista de candidatos con score perfecto y seleccionarlo
+      const nuevoCandidato = {
+        ...nuevoProveedor,
+        _score: 100
+      };
+      
+      setCandidatos([nuevoCandidato, ...candidatos]);
+      setProveedorId(nuevoCandidato.id);
+      setIsSupplierModalOpen(false);
+    } catch (e) {
+      toast.error(e.message || "Error al crear el proveedor");
+    }
+  };
+
+  const handleActivarProveedor = async (candidatoId) => {
+    try {
+      await patchProveedor(candidatoId, { estado: true });
+      toast.success("Proveedor reactivado exitosamente");
+      
+      // Actualizar la lista de candidatos
+      setCandidatos(candidatos.map(c => 
+        c.id === candidatoId ? { ...c, estado: true } : c
+      ));
+      
+      // Auto seleccionar si no hay ninguno seleccionado
+      setProveedorId(candidatoId);
+    } catch (e) {
+      toast.error(e.message || "Error al activar el proveedor");
     }
   };
 
@@ -348,15 +390,29 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
                       candidatos.map((c) => (
                         <div
                           key={c.id}
-                          className={`candidato-card ${proveedorId === c.id ? "selected" : ""}`}
-                          onClick={() => setProveedorId(c.id)}
+                          className={`candidato-card ${proveedorId === c.id ? "selected" : ""} ${c.estado === false ? "deactivated" : ""}`}
+                          onClick={() => {
+                            if (c.estado !== false) setProveedorId(c.id);
+                          }}
+                          style={{
+                            opacity: c.estado === false ? 0.7 : 1,
+                            border: c.estado === false ? "1px dashed #ef4444" : undefined
+                          }}
                         >
-                          <div className="candidato-avatar">
+                          <div className="candidato-avatar" style={{ background: c.estado === false ? "#fee2e2" : undefined, color: c.estado === false ? "#ef4444" : undefined }}>
                             {c.razonSocial?.charAt(0) || "P"}
                           </div>
                           <div className="candidato-info">
-                            <strong>{c.razonSocial}</strong>
+                            <strong>{c.razonSocial} {c.estado === false && <span style={{color: "#ef4444", fontSize: 10, marginLeft: 5}}>(Inactivo)</span>}</strong>
                             <span>{c.identificacion}</span>
+                            {c.estado === false && (
+                              <button 
+                                onClick={(e) => { e.stopPropagation(); handleActivarProveedor(c.id); }}
+                                style={{ marginTop: 5, padding: "4px 8px", background: "#ef4444", color: "white", border: "none", borderRadius: 4, cursor: "pointer", fontSize: 11 }}
+                              >
+                                Activar Proveedor
+                              </button>
+                            )}
                           </div>
                           <span className={`score-badge ${getScoreClass(c._score)}`}>
                             {getScoreLabel(c._score)} ({c._score})
@@ -365,9 +421,30 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
                       ))
                     ) : (
                       <p style={{ fontSize: 12, color: "#94a3b8", textAlign: "center", padding: 16 }}>
-                        No se encontraron proveedores coincidentes. Registre el proveedor primero.
+                        No se encontraron proveedores coincidentes en su base de datos.
                       </p>
                     )}
+                    <button
+                      className="btn-create-supplier-inline"
+                      onClick={() => setIsSupplierModalOpen(true)}
+                      style={{
+                        marginTop: 10,
+                        width: "100%",
+                        padding: "10px",
+                        background: "#f1f5f9",
+                        color: "#3b82f6",
+                        border: "1px dashed #cbd5e1",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "6px"
+                      }}
+                    >
+                      <Truck size={16} /> Crear Proveedor Detectado
+                    </button>
                   </div>
                 </div>
 
@@ -409,13 +486,17 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
                                 value={item.productoId || ""}
                                 onChange={(e) => {
                                   const newItems = [...items];
-                                  newItems[idx].productoId = e.target.value
-                                    ? parseInt(e.target.value)
-                                    : null;
+                                  const val = e.target.value;
+                                  newItems[idx].productoId = val === "NEW" ? "NEW" : (val ? parseInt(val) : null);
                                   setItems(newItems);
                                 }}
+                                style={{
+                                  borderColor: item.productoId === "NEW" ? "#3b82f6" : "#cbd5e1",
+                                  backgroundColor: item.productoId === "NEW" ? "#eff6ff" : "white"
+                                }}
                               >
-                                <option value="">— Sin vincular —</option>
+                                <option value="NEW">✨ Crear Nuevo Automáticamente</option>
+                                <option value="">— Ignorar Ítem —</option>
                                 {productos
                                   .filter((p) => p.estado !== false)
                                   .map((p) => (
@@ -559,6 +640,19 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
           </div>
         </div>
       </div>
+
+      <SupplierModal
+        isOpen={isSupplierModalOpen}
+        onClose={() => setIsSupplierModalOpen(false)}
+        onSave={handleSaveNewSupplier}
+        initialData={{
+          idType: datosExtraidos?.vendorRuc?.length === 10 ? "Cédula" : "RUC",
+          identificacion: datosExtraidos?.vendorRuc || "",
+          razonSocial: datosExtraidos?.vendorName || "",
+          nombreComercial: datosExtraidos?.vendorName || ""
+        }}
+        mode="create"
+      />
     </div>,
     document.body
   );
