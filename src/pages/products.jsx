@@ -8,6 +8,7 @@ import ViewProductModal from "../components/ViewProductModal";
 import DeleteModal from "../components/DeleteModal";
 import ErrorModal from "../components/ErrorModal";
 import Table from "../components/Table";
+import toast from "react-hot-toast";
 
 import {
   getProductos,
@@ -115,6 +116,7 @@ export default function Productos() {
         estado: true,
       });
       setOpenNewModal(false);
+      toast.success("Producto creado correctamente");
       loadProductos();
     } catch (error) {
       console.error("Error creando producto", error);
@@ -135,6 +137,7 @@ export default function Productos() {
         estado: data.estado,
       });
       setOpenEditModal(false);
+      toast.success("Producto actualizado correctamente");
       loadProductos();
     } catch (error) {
       console.error("Error actualizando producto", error);

@@ -112,12 +112,12 @@ export default function ViewFacturaModal({ isOpen, onClose, facturaId }) {
                       (item, idx) => (
                         <tr key={idx}>
                           <td>{idx + 1}</td>
-                          <td>{item.descripcion || "—"}</td>
+                          <td>{item.producto?.nombre || item.descripcion || "—"}</td>
                           <td>{item.cantidad}</td>
-                          <td>${Number(item.precioUnitario || 0).toFixed(2)}</td>
+                          <td>${Number(item.precioCosto || item.precioUnitario || 0).toFixed(2)}</td>
                           <td>
                             <strong>
-                              ${Number(item.totalItem || item.total || 0).toFixed(2)}
+                              ${Number(item.subtotal || item.totalItem || item.total || 0).toFixed(2)}
                             </strong>
                           </td>
                           <td>
