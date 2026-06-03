@@ -475,8 +475,37 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
                                 </div>
                               )}
                             </td>
-                            <td>{item.cantidad}</td>
-                            <td>${Number(item.precioUnitario || 0).toFixed(2)}</td>
+                            <td>
+                              <input 
+                                type="number" 
+                                min="1" 
+                                value={item.cantidad || ""}
+                                style={{ width: 60, padding: "4px", borderRadius: 4, border: "1px solid #cbd5e1" }}
+                                onChange={(e) => {
+                                  const val = e.target.value ? Number(e.target.value) : 0;
+                                  const newItems = [...items];
+                                  newItems[idx].cantidad = val;
+                                  newItems[idx].totalItem = val * (Number(newItems[idx].precioUnitario) || 0);
+                                  setItems(newItems);
+                                }}
+                              />
+                            </td>
+                            <td>
+                              <input 
+                                type="number" 
+                                min="0" 
+                                step="0.01"
+                                value={item.precioUnitario === 0 ? 0 : (item.precioUnitario || "")}
+                                style={{ width: 80, padding: "4px", borderRadius: 4, border: "1px solid #cbd5e1" }}
+                                onChange={(e) => {
+                                  const val = e.target.value ? Number(e.target.value) : 0;
+                                  const newItems = [...items];
+                                  newItems[idx].precioUnitario = val;
+                                  newItems[idx].totalItem = val * (Number(newItems[idx].cantidad) || 0);
+                                  setItems(newItems);
+                                }}
+                              />
+                            </td>
                             <td>
                               <strong>${Number(item.totalItem || 0).toFixed(2)}</strong>
                             </td>

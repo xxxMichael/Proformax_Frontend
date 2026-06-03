@@ -57,11 +57,16 @@ export default function ProductModal({
     if (mode === "create") {
       setForm({ ...emptyForm });
     } else if (initialData) {
+      const tipoIngresado = (initialData.tipo || "").toLowerCase();
+      const tipoValido = TIPOS_PRODUCTO.some((t) => t.value === tipoIngresado)
+        ? tipoIngresado
+        : "producto";
+
       setForm({
         codigo: initialData.codigo || "",
         nombre: initialData.nombre || "",
         descripcion: initialData.descripcion || "",
-        tipo: initialData.tipo || "producto",
+        tipo: tipoValido,
         precioBase: initialData.precioBase ?? "",
         stockActual: initialData.stockActual ?? "",
         aplicaIva: initialData.aplicaIva ?? true,
