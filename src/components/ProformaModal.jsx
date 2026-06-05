@@ -147,6 +147,7 @@ export default function ProformaModal({
                     <div className="client-details">
                       <strong>{clientes.find(c => c.id === parseInt(form.clienteId))?.nombres} {clientes.find(c => c.id === parseInt(form.clienteId))?.apellidosRazonSocial}</strong>
                       <span>ID: {clientes.find(c => c.id === parseInt(form.clienteId))?.identificacion}</span>
+                      <span>Dir: {clientes.find(c => c.id === parseInt(form.clienteId))?.direccion || "Sin dirección"}</span>
                     </div>
                     {!isEditing && (
                       <button className="btn-change-client" onClick={() => setShowClientSearch(true)}>Cambiar</button>

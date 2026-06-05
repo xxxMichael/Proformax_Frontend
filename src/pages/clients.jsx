@@ -90,7 +90,7 @@ export default function Clientes() {
         apellidosRazonSocial: data.lastnames,
         email: data.email,
         telefono: data.phone,
-        direccion: "Sin dirección"
+        direccion: data.address || "Sin dirección"
       });
       setOpenNewModal(false);
       loadClientes();
@@ -108,7 +108,7 @@ export default function Clientes() {
         apellidosRazonSocial: data.lastnames,
         email: data.email,
         telefono: data.phone,
-        direccion: "Sin dirección"
+        direccion: data.address || "Sin dirección"
       });
       setOpenEditModal(false);
       loadClientes();

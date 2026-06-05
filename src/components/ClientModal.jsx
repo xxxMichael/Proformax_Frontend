@@ -60,6 +60,7 @@ export default function ClientModal({
     lastnames: "",
     phone: "",
     email: "",
+    address: "",
   };
 
   const [form, setForm] = useState(emptyForm);
@@ -84,6 +85,7 @@ export default function ClientModal({
         lastnames: initialData.lastnames || "",
         phone: initialData.phone || "",
         email: initialData.email || "",
+        address: initialData.direccion || "",
       });
     }
   }, [isOpen, initialData]);
@@ -246,6 +248,12 @@ export default function ClientModal({
             <label>Email:</label>
             <input name="email" value={form.email} onChange={handleChange} />
             {errors.email && <span className="error">{errors.email}</span>}
+          </div>
+
+          <div className="full-width">
+            <label>Dirección:</label>
+            <input name="address" value={form.address} onChange={handleChange} />
+            {errors.address && <span className="error">{errors.address}</span>}
           </div>
 
         </div>
