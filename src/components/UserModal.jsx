@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
+import { Eye, EyeOff } from "lucide-react";
 import "./UserModal.css";
 
 export default function UserModal({
@@ -18,6 +19,7 @@ export default function UserModal({
 
   const [form, setForm] = useState(emptyForm);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -114,13 +116,23 @@ export default function UserModal({
 
           <div className="user-form-group">
             <label>{mode === "create" ? "Contraseña:" : "Nueva Contraseña (Opcional):"}</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              placeholder={mode === "create" ? "Contraseña segura..." : "Dejar en blanco para no cambiar"}
-            />
+            <div className="password-container" style={{ position: "relative", display: "flex", alignItems: "center" }}>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder={mode === "create" ? "Contraseña segura..." : "Dejar en blanco para no cambiar"}
+                style={{ width: "100%", paddingRight: "40px" }}
+              />
+              <span 
+                className="eye" 
+                onClick={() => setShowPassword(!showPassword)}
+                style={{ position: "absolute", right: "12px", cursor: "pointer", color: "#64748b", display: "flex", alignItems: "center" }}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </span>
+            </div>
             {errors.password && <span className="error">{errors.password}</span>}
           </div>
 
