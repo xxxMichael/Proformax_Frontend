@@ -6,6 +6,7 @@ import ClientModal from "../components/ClientModal";
 import ViewModal from "../components/ViewModal";
 import DeleteModal from "../components/DeleteModal"; 
 import ErrorModal from "../components/ErrorModal";
+import toast from "react-hot-toast";
 import Table from "../components/Table"; 
 
 import {
@@ -70,6 +71,7 @@ export default function Clientes() {
     try {
       await deleteCliente(clienteSeleccionado.id);
       setOpenDeleteModal(false);
+      toast.success("Cliente eliminado exitosamente");
       loadClientes();
     } catch (error) {
       console.error("Error eliminando cliente", error);
@@ -93,9 +95,11 @@ export default function Clientes() {
         direccion: data.address || "Sin dirección"
       });
       setOpenNewModal(false);
+      toast.success("Cliente creado exitosamente");
       loadClientes();
     } catch (error) {
       console.error("Error creando cliente", error);
+      toast.error(error.message || "Error al crear el cliente");
     }
   };
 
@@ -111,9 +115,11 @@ export default function Clientes() {
         direccion: data.address || "Sin dirección"
       });
       setOpenEditModal(false);
+      toast.success("Cliente actualizado exitosamente");
       loadClientes();
     } catch (error) {
       console.error("Error actualizando cliente", error);
+      toast.error(error.message || "Error al actualizar el cliente");
     }
   };
 

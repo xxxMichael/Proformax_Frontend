@@ -91,6 +91,7 @@ export default function Productos() {
     try {
       await deleteProducto(productoSeleccionado.id);
       setOpenDeleteModal(false);
+      toast.success("Producto desactivado correctamente");
       loadProductos();
     } catch (error) {
       console.error("Error desactivando producto", error);
@@ -120,6 +121,7 @@ export default function Productos() {
       loadProductos();
     } catch (error) {
       console.error("Error creando producto", error);
+      toast.error(error.message || "Error al crear el producto");
     }
   };
 
@@ -141,6 +143,7 @@ export default function Productos() {
       loadProductos();
     } catch (error) {
       console.error("Error actualizando producto", error);
+      toast.error(error.message || "Error al actualizar el producto");
     }
   };
 

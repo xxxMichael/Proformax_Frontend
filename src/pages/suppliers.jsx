@@ -95,9 +95,11 @@ export default function Proveedores() {
         estado: true,
       });
       setOpenNewModal(false);
+      toast.success("Proveedor creado exitosamente");
       loadProveedores();
     } catch (error) {
       console.error("Error creando proveedor", error);
+      toast.error(error.message || "Error al crear el proveedor");
     }
   };
 
@@ -114,9 +116,11 @@ export default function Proveedores() {
         estado: data.estado !== undefined ? data.estado : true,
       });
       setOpenEditModal(false);
+      toast.success("Proveedor actualizado exitosamente");
       loadProveedores();
     } catch (error) {
       console.error("Error actualizando proveedor", error);
+      toast.error(error.message || "Error al actualizar el proveedor");
     }
   };
 
