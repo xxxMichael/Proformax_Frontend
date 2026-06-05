@@ -148,7 +148,7 @@ export default function Facturas() {
                 ${Number(f.total || 0).toFixed(2)}
               </span>,
               <span key={`items-${f.id}`} className="badge-items">
-                {(f.lineas || f.items || f.detalles || []).length} ítems
+                {f._count?.detalles ?? (f.lineas || f.items || f.detalles || []).length} ítems
               </span>,
             ])}
             loading={loading}

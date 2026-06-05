@@ -56,6 +56,7 @@ export default function SupplierModal({
     direccion: "",
     telefono: "",
     email: "",
+    estado: true,
   };
 
   const [form, setForm] = useState(emptyForm);
@@ -78,6 +79,7 @@ export default function SupplierModal({
         direccion: initialData.direccion || "",
         telefono: initialData.telefono || "",
         email: initialData.email || "",
+        estado: initialData.estado !== false,
       });
     }
   }, [isOpen, initialData]);
@@ -90,7 +92,11 @@ export default function SupplierModal({
       value = value.replace(/\D/g, "");
     }
 
-    setForm({ ...form, [e.target.name]: value });
+    if (e.target.name === "estado") {
+      setForm({ ...form, estado: e.target.checked });
+    } else {
+      setForm({ ...form, [e.target.name]: value });
+    }
   };
 
   const validarFormulario = () => {
@@ -269,6 +275,26 @@ export default function SupplierModal({
               <span className="error">{errors.direccion}</span>
             )}
           </div>
+
+          {mode === "edit" && (
+            <div className="full-width">
+              <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontWeight: "600", marginTop: "10px" }}>
+                <input
+                  type="checkbox"
+                  name="estado"
+                  checked={form.estado}
+                  onChange={handleChange}
+                  style={{ width: "18px", height: "18px", margin: 0, cursor: "pointer" }}
+                />
+                Proveedor Activo
+              </label>
+              {!form.estado && (
+                <p style={{ fontSize: "12px", color: "#ef4444", marginTop: "4px" }}>
+                  Al guardar, este proveedor volverá a estar inactivo. Para reactivarlo, marque la casilla.
+                </p>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="modal-buttons">

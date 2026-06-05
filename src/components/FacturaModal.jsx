@@ -359,6 +359,7 @@ export default function FacturaModal({ isOpen, onClose, onSuccess }) {
                       <label>Nº Factura</label>
                       <input
                         type="text"
+                        maxLength={17}
                         value={numeroFactura}
                         onChange={(e) => setNumeroFactura(e.target.value)}
                       />

@@ -7,6 +7,7 @@ import ViewSupplierModal from "../components/ViewSupplierModal";
 import DeleteModal from "../components/DeleteModal";
 import ErrorModal from "../components/ErrorModal";
 import Table from "../components/Table";
+import toast from "react-hot-toast";
 
 import {
   getProveedores,
@@ -69,6 +70,7 @@ export default function Proveedores() {
     try {
       await deleteProveedor(proveedorSeleccionado.id);
       setOpenDeleteModal(false);
+      toast.success("Proveedor desactivado exitosamente.");
       loadProveedores();
     } catch (error) {
       console.error("Error desactivando proveedor", error);
@@ -109,7 +111,7 @@ export default function Proveedores() {
         direccion: data.direccion,
         telefono: data.telefono,
         email: data.email,
-        estado: true,
+        estado: data.estado !== undefined ? data.estado : true,
       });
       setOpenEditModal(false);
       loadProveedores();
@@ -176,6 +178,7 @@ export default function Proveedores() {
             onView={(index) => abrirVer(proveedores[index])}
             onEdit={(index) => abrirEditar(proveedores[index])}
             onDelete={(index) => abrirEliminar(proveedores[index])}
+            canDelete={(index) => proveedores[index].estado !== false}
           />
 
         </div>

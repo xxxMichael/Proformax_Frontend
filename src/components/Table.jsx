@@ -7,6 +7,7 @@ export default function Table({
   onView,
   onEdit,
   onDelete,
+  canDelete,
   onCustomAction,
   customActionIcon = null,
   customActionTitle = "Acción",
@@ -71,7 +72,7 @@ export default function Table({
                     </button>
                   )}
 
-                  {onDelete && (
+                  {onDelete && (!canDelete || canDelete(startIndex + rowIndex)) && (
                     <button
                       className="btn-icon-action-premium delete"
                       onClick={() => onDelete(startIndex + rowIndex)}
